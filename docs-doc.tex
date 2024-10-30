@@ -1,0 +1,55 @@
+%! Author = Jander Moreira
+%! Date = 2024
+
+\documentclass[11pt, outputdir = ./out]{article}
+\usepackage[T1]{fontenc}
+
+\usepackage{docs}
+
+\title{The \PackageName{docs} package\footnote{This document is refers to the package version \DocsVersion, dated \DocsDate. Compilation date: \today.}}
+\author{Jander Moreira -- \texttt{moreira.jander@gmail.com}}
+\date{October 27, 2024}
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\DocsCreate{Option}[
+    prefix = \textbackslash,
+    arguments prefix = \texttt{: },
+    index entry = Options,
+    index remark = { \textsuperscript{\textit{opt.}}},
+    font = \scshape\bfseries,
+    color = blue,
+]
+
+\section{Introduction}
+\index{intro}
+
+
+\section{Package usage}
+The package \PackageName{docs}.
+
+\DocsCreate{Package}[color = blue, prefix = \textbackslash]
+\begin{Package*}{usepackage}{\OArg{package options}\FArg{docs}}{}
+    No \Argument{package options} for now.
+\end{Package*}
+
+\section{References and index support}
+
+An \textit{element} in the scope of this document refers to an item that can be highlighted and referenced, such as macros, options and environments, for example.
+
+\subsection{Creating elements}
+
+\section{Code examples}
+
+Minted \texttt{outputdir}.
+
+\section{Indexing elements}
+
+\section{Version control}
+
+\printindex
+
+\end{document}

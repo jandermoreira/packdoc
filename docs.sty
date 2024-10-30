@@ -1,0 +1,255 @@
+%! Class = docs
+%! Author = Jander Moreira
+%! Date = 2024/10
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{docs}[2024/10/27 v0.1 Format documentation]
+%\LoadClass[11pt]{article}
+
+\NewDocumentCommand{\DocsVersion}{}{v0.1}
+\NewDocumentCommand{\DocsDate}{}{2024/10/27}
+
+\RequirePackage{etoolbox}
+\appto{\ttfamily}{\frenchspacing}{}{}
+\appto{\tableofcontents}{\bigskip}
+
+\RequirePackage{enumitem}
+\setlist{nosep}
+
+\RequirePackage{textcomp}
+\RequirePackage[all]{nowidow}
+
+\RequirePackage{geometry}
+\geometry{top = 2.5cm, bottom = 2cm, right = 2.5cm, left = 4cm}
+
+\RequirePackage{hyperref}
+\hypersetup{
+    colorlinks,
+    urlcolor = blue!20!black,
+    linkcolor = blue!10!black,
+    citecolor = black!80,
+}
+
+\RequirePackage{cleveref}
+
+\RequirePackage{makeidx}
+\makeindex
+
+\RequirePackage{minted}
+\newminted{latex}{autogobble, breaklines, bgcolor = blue!5, fontsize = \footnotesize}
+\newmintinline{latex}{}
+
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins, listings, minted, breakable}
+\tcbset{
+    description/.style = {
+        coltitle = black,
+        fontupper = \normalsize,
+        colbacktitle = white,
+        titlerule = 0.001pt,
+        enhanced jigsaw,
+        breakable,
+        width = \dimexpr \linewidth - 2em \relax,
+        flush right,
+        top = 0.5ex,
+        bottom = 0pt,
+        left = 0pt,
+        right = 0pt,
+        opacitybacktitle = 0,
+        opacityframe = 0,
+        opacityback = 0,
+    },
+    example/.style = {
+        enhanced jigsaw,
+        breakable,
+        colback = blue!3,
+        colframe = blue!40!black!30,
+        sharp corners,
+        box align = top,
+        boxrule = 1pt,
+        fontupper = \footnotesize,
+        fontlower = \footnotesize,
+        minted options = {
+            fontsize = \footnotesize,
+            breaklines,
+            autogobble,
+        },
+        listing engine = minted,
+    }
+}
+\newtcblisting{example}[1][]{
+    example,
+    #1
+}
+
+
+
+
+\colorlet{argumentcolor}{orange!30!brown}
+\colorlet{colorcolor}{blue!75!black}
+\definecolor{optioncolor}{HTML}{687821}
+\colorlet{environmentcolor}{brown!80!magenta}
+\colorlet{palettecolor}{teal}
+\definecolor{stylecolor}{HTML}{4c7c71}
+
+\NewDocumentCommand{\PackageName}{ m }{\mbox{\textsf{#1}}}
+
+% Arguments
+\NewDocumentCommand{\Argument}{ m }{%
+    \textcolor{argumentcolor}{$\langle$\normalfont\small\textsl{#1}$\rangle$}%
+}
+\NewDocumentCommand{\MArg}{ m }{\mbox{\texttt{\{}\Argument{#1}\texttt{\}}}}
+\NewDocumentCommand{\OArg}{ m }{\mbox{\texttt{[}\Argument{#1}\texttt{]}}}
+\NewDocumentCommand{\LArg}{ m }{\mbox{\texttt{<}\Argument{#1}\texttt{>}}}
+\NewDocumentCommand{\FArg}{ m }{\mbox{\texttt{\{#1\}}}}
+
+% General text
+\NewDocumentCommand{\Deprecated}{}{\textcolor{red!80!black}{(deprecated)}}
+\NewDocumentCommand{\Empty}{}{%
+    \mbox{\normalfont\textcolor{black!60}{\textsl{--empty--}}}
+}
+
+% Elements
+
+%\colorlet{docs@#1@Color}{##1}%
+\NewDocumentCommand{\DocsSetElement}{ m >{ \TrimSpaces } m }{%
+    \pgfkeys{
+        /docs/.cd,
+        prefix/.code = {\csdef{docs@#1@Prefix}{##1}},
+        arguments prefix/.code = {\csdef{docs@#1@ArgumentsPrefix}{##1}},
+        index entry/.code = {\csdef{docs@#1@IndexEntry}{##1}},
+        index remark/.code = {\csdef{docs@#1@IndexRemark}{##1}},
+        font/.code = {\csdef{docs@#1@Font}{##1}},
+        color/.code = {\colorlet{docs@#1@Color}{##1}},
+    }
+    \pgfkeys{
+        /docs/.cd,
+        prefix = {},
+        arguments prefix = {},
+        index entry = #1,
+        index remark = { (#1)},
+        font = \ttfamily,
+        color = .!75,
+    %
+        #2,
+    }%
+}
+
+\ExplSyntaxOn
+\NewDocumentCommand{\DocsCreate}{ m o }{
+    \IfValueTF{#2}{%
+        \DocsSetElement{#1}{#2}%
+    }{
+        \DocsSetElement{#1}{}%
+    }%
+    \exp_args:Nc \NewDocumentCommand { #1 }{ m }{
+        \DocsElement{#1}{##1}
+    }
+    \exp_args:Nc \NewDocumentCommand { #1Def }{ m }{
+        \DocsRefElement{#1}{##1}
+    }
+    \exp_args:Nc \NewDocumentCommand { #1Ref }{ m }{
+        \DocsRefElement{#1}{##1}
+    }
+    \exp_args:Nc \NewDocumentCommand { #1Ind }{ m }{
+        \DocsIndElement{#1}{##1}
+    }
+    \exp_args:Nc \NewDocumentCommand { #1Index }{ m }{
+        \DocsIndexElement{#1}{##1}
+    }
+    \exp_args:Nc \NewDocumentCommand { #1RefInd }{ m }{
+        \DocsRefIndElement{#1}{##1}
+    }
+    \NewDocumentEnvironment{#1*}{ m m m }{%
+        \begin{element*}{#1}{##1}{##2}{##3}
+        }{
+        \end{element*}
+    }
+    \NewDocumentEnvironment{#1def}{ m m m }{
+        \begin{elementdef}{#1}{##1}{##2}{##3}
+        }{
+        \end{elementdef}
+    }
+}
+\ExplSyntaxOff
+
+% #1: Element type
+% #2: Element instance
+\NewDocumentCommand{\DocsElement}{ m m }{%
+    \ifcsdef{\string\color@docs@#1@Color}{%
+        \mbox{\textcolor{docs@#1@Color}{\csuse{docs@#1@Font}\csuse{docs@#1@Prefix}#2}}%
+    }{%
+        \mbox{\csuse{docs@#1@Prefix}\csuse{docs@#1@Font}#2}%
+    }%
+}
+
+% #1: Element type
+% #2: Element instance
+\NewDocumentCommand{\DocsIndexElement}{ m m }{%
+    \index{#2@\DocsElement{#1}{#2}\csuse{docs@#1@IndexRemark}}%
+    \index{\csuse{docs@#1@IndexEntry}!#2@\DocsElement{#1}{#2}}%
+}
+
+% #1: Element type
+% #2: Element instance
+\NewDocumentCommand{\DocsIndElement}{ m m }{%
+    \DocsIndexElement{#1}{#2}%
+    \DocsElement{#1}{#2}%
+}
+
+% #1: Element type
+% #2: Element instance
+\NewDocumentCommand{\DocsRefElement}{ m m }{%
+    \hyperref[#1:#2]{\DocsElement{#1}{#2}}%
+}
+
+% #1: Element type
+% #2: Element instance
+\NewDocumentCommand{\DocsDefElement}{ m m }{%
+    \phantomsection%
+    \label{#1:#2}%
+    \DocsIndexElement{#1}{#2}%
+    \DocsElement{#1}{#2}%
+}
+
+% #1: Element type
+% #2: Element instance
+\NewDocumentCommand{\DocsRefIndElement}{ m m }{%
+    \DocsIndexElement{#1}{#2}%
+    \hyperref[#1:#2]{\DocsElement{#1}{#2}}%
+}
+
+% #1: Element type
+% #2: Element instance
+% #3: Arguments
+% #4: Default
+\newlength{\docassignment}
+\newlength{\docdefault}
+\NewDocumentEnvironment{element*}{ m m m m }{%
+    \settowidth{\docassignment}{#3}%
+    \settowidth{\docdefault}{#4}%
+    \begin{tcolorbox}
+    [
+        title = {%
+        \hspace{-2em}\DocsElement{#1}{#2}%
+        \ifdimgreater{\docassignment}{0pt}{\csuse{docs@#1@ArgumentsPrefix}#3}{}%
+        \ifdimgreater{\docdefault}{0pt}{\hfill\textit{Default:} #4}{}%
+        },
+        description,
+    ]
+        \label{#1:#2}%
+        }{
+    \end{tcolorbox}%
+    \medskip%
+}
+
+% #1: Element type
+% #2: Element instance
+% #3: Arguments
+% #4: Default
+\NewDocumentEnvironment{elementdef}{ m m m m }{
+    \begin{element*}{#1}{#2}{#3}{#4}
+        \DocsIndexElement{#1}{#2}%
+        }{
+    \end{element*}
+}
