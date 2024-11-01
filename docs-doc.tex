@@ -10,19 +10,11 @@
 \author{Jander Moreira -- \texttt{moreira.jander@gmail.com}}
 \date{October 27, 2024}
 
-
 \begin{document}
 \maketitle
+
 \tableofcontents
 
-\DocsCreate{Option}[
-    prefix = \textbackslash,
-    arguments prefix = \texttt{: },
-    index entry = Options,
-    index remark = { \textsuperscript{\textit{opt.}}},
-    font = \scshape\bfseries,
-    color = blue,
-]
 
 \section{Introduction}
 \index{intro}
@@ -36,17 +28,158 @@ The package \PackageName{docs}.
     No \Argument{package options} for now.
 \end{Package*}
 
+
 \section{References and index support}
 
 An \textit{element} in the scope of this document refers to an item that can be highlighted and referenced, such as macros, options and environments, for example.
 
+\DocsCreate{Option}[
+color = green!75!black,
+index entry = Options,
+index remark = {~(option)},
+arguments prefix = \texttt{ = },
+]
+\DocsCreate{Macro}[
+prefix = \textbackslash,
+color = blue,
+index entry = Macros,
+index remark = {~(macro)},
+]
+To instance an element, the \MacroRef{DocsCreate} must be used.
+
+\begin{Macrodef}{DocsCreate}{\MArg{element name}\OArg{element options}}{}
+    This macro creates a new element named \Argument{element name} and several other macros to use it.
+
+    \begin{example}{}
+        \DocsCreate{MyOption}[color = red]
+        This is a declaration \MyOption{scale} is used to scale the box.
+
+        Click to go to \MyOptionRef{scale}.
+    \end{example}
+\end{Macrodef}
+
+When an element is created, several other macros are created for different needs.
+
+\begin{center}
+    \begin{tabular}{lp{4.8cm}l}
+        \textbf{Macro} & \textbf{Description} & \textbf{Example} \\
+        \hline
+        \Macro{\Argument{element name}} & Formats to element style. & \latexinline{\MyOption{a4paper}} \\
+        \Macro{\Argument{element name}Def} & Formats to element style, sets a label and index the element. & \latexinline{\MyOptionDef{left}} \\
+        \Macro{\Argument{element name}Ref} & Formats to element style and hyperlinks to the definition. & \latexinline{\MyOptionRef{no align}} \\
+        \Macro{\Argument{element name}Ind} & Formats to element style and index the element.  & \latexinline{\MyOptionInd{showframe}} \\
+        \Macro{\Argument{element name}Index} & Index the element without any typeset. & \latexinline{\MyOptionIndex{element}} \\
+        \Macro{\Argument{element name}RefInd} & Formats to element style, hyperlinks to the definition and add an entry to the index. & \latexinline{\MyOptionRefInd{a4paper}} \\
+    \end{tabular}
+\end{center}
+
+Altogether, two environments are also created.
+
+\DocsCreate{Environment}[
+    index entry = Environments,
+    index remark = (environment),
+    color = orange!70!black,
+]
+
+\begin{center}
+    \begin{tabular}{lp{7cm}l}
+        \textbf{Environment} & \textbf{Description} & \textbf{Example} \\
+        \hline
+        \Environment{\Argument{element name}def} & Defines a item and creates a label and an index entry. & \latexinline{\begin{MyMacrodef}} \\
+        \Environment{\Argument{element name}env} & Defines an environment and creates a label and an index entry. & \latexinline{\begin{MyMacrodef}} \\
+        \Environment{\Argument{element name}*} & Defines an element; no labels nor indexing. & \latexinline{\begin{MyMacro*}} \\
+    \end{tabular}
+\end{center}
+
+\bigskip
+These macros and environments are covered by two examples
+
+\subsection*{LinkColors: an element for colors in links}
+
+Suppose you are writing a package such as \PackageName{hyperref} that support some colored features. So you can create an element named \latexinline{LinkColors} to document options to set some colors. This can be done with \Macro{DocsCreate}.
+
+\begin{latexcode}
+    \DocsCreate{LinkColors}[color = red]
+\end{latexcode}
+
+This command creates several other macros, as described below.
+
+\begin{Macro*}{LinkColors}{\OArg{options}\MArg{text}}{}
+    The \Argument{text} is simply expanded to the specified format for the element.
+\end{Macro*}
+
+\begin{Macro*}{LinkColorsDef}{\OArg{options}\MArg{text}}{}
+    The \Argument{text} expands to the specified format, a label is created and \Argument{text} is inserted in the index.
+\end{Macro*}
+
+\begin{Macro*}{LinkColorsRef}{\OArg{options}\MArg{text}}{}
+    The \Argument{text} expands to the specified format and a link to where \Argument{text} was defined is inserted.
+\end{Macro*}
+
+\begin{Macro*}{LinkColorsInd}{\OArg{options}\MArg{text}}{}
+    The \Argument{text} expands to the specified format and \Argument{text} is added to the index. No labels are created.
+\end{Macro*}
+
+\begin{Macro*}{LinkColorsIndex}{\OArg{options}\MArg{text}}{}
+    \Macro{LinkColorsIndex} inserts an entry for \Argument{text} in the index without producing any output.
+\end{Macro*}
+
+\begin{Macro*}{LinkColorsRefInd}{\OArg{options}\MArg{text}}{}
+    Extra index entry
+\end{Macro*}
+
+\begin{example}{}
+    \DocsCreate{LinkColors}[color = red, arguments prefix = \texttt{~=~}]
+    The colors in links use the follwing colors:
+    \begin{itemize}
+        \item \LinkColorsDef{mail} for \texttt{mailto:} links;
+        \item \LinkColorsDef{url} for \texttt{http:} and \texttt{https:} links;
+        \item \LinkColorsDef{pipe} for \texttt{pipe:} links;
+        \item \LinkColorsDef{link} for other links.
+    \end{itemize}
+
+    All these colors have default values, such as dark blue for \LinkColorsRef{url}. There is option for citation, such as \LinkColors{citecolor} in the \PackageName{hyperref} package.
+
+    The \LinkColorRef{mail} option is defined below.
+
+    \begin{LinkColorsdef}{mail}{\Argument{color}}{}
+        This option sets the color for \texttt{mailto:} links to \Argument{color}.
+    \end{LinkColorsdef}
+\end{example}
+
+
+
+Some options to customize the element appearance are provided.
+
+
+\begin{Optiondef}{color}{\Argument{color}}{Initially: \latexinline{.!75}}
+\end{Optiondef}
+
+\begin{Optiondef}{font}{\Argument{font}}{Initially: \Macro{ttfamily}}
+\end{Optiondef}
+
+\begin{Optiondef}{index entry}{\Argument{text}}{Initially: \Argument{element name}}
+\end{Optiondef}
+
+\begin{Optiondef}{index remark}{\Argument{text}}{Initially: \Argument{element name}}
+\end{Optiondef}
+
+\begin{Optiondef}{prefix}{\Argument{text}}{Initially: \Empty}
+\end{Optiondef}
+
+\begin{Optiondef}{arguments prefix}{\Argument{text}}{Initially: \Empty}
+\end{Optiondef}
+
 \subsection{Creating elements}
+
 
 \section{Code examples}
 
 Minted \texttt{outputdir}.
 
+
 \section{Indexing elements}
+
 
 \section{Version control}
 
