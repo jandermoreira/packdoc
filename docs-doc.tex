@@ -17,171 +17,307 @@
 
 
 \section{Introduction}
-\index{intro}
 
 
-\section{Package usage}
-The package \PackageName{docs}.
-
-\DocsCreate{Package}[color = blue, prefix = \textbackslash]
-\begin{Package*}{usepackage}{\OArg{package options}\FArg{docs}}{}
-    No \Argument{package options} for now.
-\end{Package*}
-
-
-\section{References and index support}
-
-An \textit{element} in the scope of this document refers to an item that can be highlighted and referenced, such as macros, options and environments, for example.
-
-\DocsCreate{Option}[
-color = green!75!black,
-index entry = Options,
-index remark = {~(option)},
-arguments prefix = \texttt{ = },
-]
-\DocsCreate{Macro}[
-prefix = \textbackslash,
-color = blue,
-index entry = Macros,
-index remark = {~(macro)},
-]
-To instance an element, the \MacroRef{DocsCreate} must be used.
-
-\begin{Macrodef}{DocsCreate}{\MArg{element name}\OArg{element options}}{}
-    This macro creates a new element named \Argument{element name} and several other macros to use it.
-
-    \begin{example}{}
-        \DocsCreate{MyOption}[color = red]
-        This is a declaration \MyOption{scale} is used to scale the box.
-
-        Click to go to \MyOptionRef{scale}.
-    \end{example}
-\end{Macrodef}
-
-When an element is created, several other macros are created for different needs.
-
-\begin{center}
-    \begin{tabular}{lp{4.8cm}l}
-        \textbf{Macro} & \textbf{Description} & \textbf{Example} \\
-        \hline
-        \Macro{\Argument{element name}} & Formats to element style. & \latexinline{\MyOption{a4paper}} \\
-        \Macro{\Argument{element name}Def} & Formats to element style, sets a label and index the element. & \latexinline{\MyOptionDef{left}} \\
-        \Macro{\Argument{element name}Ref} & Formats to element style and hyperlinks to the definition. & \latexinline{\MyOptionRef{no align}} \\
-        \Macro{\Argument{element name}Ind} & Formats to element style and index the element.  & \latexinline{\MyOptionInd{showframe}} \\
-        \Macro{\Argument{element name}Index} & Index the element without any typeset. & \latexinline{\MyOptionIndex{element}} \\
-        \Macro{\Argument{element name}RefInd} & Formats to element style, hyperlinks to the definition and add an entry to the index. & \latexinline{\MyOptionRefInd{a4paper}} \\
-    \end{tabular}
-\end{center}
-
-Altogether, two environments are also created.
-
-\DocsCreate{Environment}[
-    index entry = Environments,
-    index remark = (environment),
-    color = orange!70!black,
-]
-
-\begin{center}
-    \begin{tabular}{lp{7cm}l}
-        \textbf{Environment} & \textbf{Description} & \textbf{Example} \\
-        \hline
-        \Environment{\Argument{element name}def} & Defines a item and creates a label and an index entry. & \latexinline{\begin{MyMacrodef}} \\
-        \Environment{\Argument{element name}env} & Defines an environment and creates a label and an index entry. & \latexinline{\begin{MyMacrodef}} \\
-        \Environment{\Argument{element name}*} & Defines an element; no labels nor indexing. & \latexinline{\begin{MyMacro*}} \\
-    \end{tabular}
-\end{center}
-
-\bigskip
-These macros and environments are covered by two examples
-
-\subsection*{LinkColors: an element for colors in links}
-
-Suppose you are writing a package such as \PackageName{hyperref} that support some colored features. So you can create an element named \latexinline{LinkColors} to document options to set some colors. This can be done with \Macro{DocsCreate}.
+\section{Package usage and options}
+To use the \PackageName{docs} package just load it.
 
 \begin{latexcode}
-    \DocsCreate{LinkColors}[color = red]
+    \usepackage{docs}
 \end{latexcode}
 
-This command creates several other macros, as described below.
 
-\begin{Macro*}{LinkColors}{\OArg{options}\MArg{text}}{}
-    The \Argument{text} is simply expanded to the specified format for the element.
-\end{Macro*}
+\section{Basic commands}
 
-\begin{Macro*}{LinkColorsDef}{\OArg{options}\MArg{text}}{}
-    The \Argument{text} expands to the specified format, a label is created and \Argument{text} is inserted in the index.
-\end{Macro*}
+A series of macros are provided to typeset things consistently.
 
-\begin{Macro*}{LinkColorsRef}{\OArg{options}\MArg{text}}{}
-    The \Argument{text} expands to the specified format and a link to where \Argument{text} was defined is inserted.
-\end{Macro*}
+\begin{Macrodef}{PackageName}{\OArg{options}\MArg{name}}{}
+    This macro is intended to typeset \Argument{name} as the name of \LaTeX\ packages and classes, such as \PackageName{amsmath} and \PackageName{article}.
 
-\begin{Macro*}{LinkColorsInd}{\OArg{options}\MArg{text}}{}
-    The \Argument{text} expands to the specified format and \Argument{text} is added to the index. No labels are created.
-\end{Macro*}
-
-\begin{Macro*}{LinkColorsIndex}{\OArg{options}\MArg{text}}{}
-    \Macro{LinkColorsIndex} inserts an entry for \Argument{text} in the index without producing any output.
-\end{Macro*}
-
-\begin{Macro*}{LinkColorsRefInd}{\OArg{options}\MArg{text}}{}
-    Extra index entry
-\end{Macro*}
+    The optional \Argument{options} can be used to locally change the style used for package names by changing \OptionRef{package style}.
+\end{Macrodef}
 
 \begin{example}{}
-    \DocsCreate{LinkColors}[color = red, arguments prefix = \texttt{~=~}]
-    The colors in links use the follwing colors:
-    \begin{itemize}
-        \item \LinkColorsDef{mail} for \texttt{mailto:} links;
-        \item \LinkColorsDef{url} for \texttt{http:} and \texttt{https:} links;
-        \item \LinkColorsDef{pipe} for \texttt{pipe:} links;
-        \item \LinkColorsDef{link} for other links.
-    \end{itemize}
+    Useful packages are \PackageName{graphicx} and \PackageName{colorx}, for example. Also \PackageName[package style = \scshape\color{blue}]{babel} and \PackageName{inputenc} are important.
+\end{example}
 
-    All these colors have default values, such as dark blue for \LinkColorsRef{url}. There is option for citation, such as \LinkColors{citecolor} in the \PackageName{hyperref} package.
+\begin{Macrodef}{Argument}{\OArg{options}\MArg{name}}{}
+    The \Macro{Argument} macro is used to typeset arguments.
 
-    The \LinkColorRef{mail} option is defined below.
+    With the option \OptionRef{argument color} the color of the argument can be changed. For now, font, size and shape for arguments are hardcoded and cannot be modified.
+\end{Macrodef}
 
-    \begin{LinkColorsdef}{mail}{\Argument{color}}{}
-        This option sets the color for \texttt{mailto:} links to \Argument{color}.
-    \end{LinkColorsdef}
+\begin{example}{}
+    The \PackageName{article} class can use \Argument{options} (see \Cref{sec:options}). The paper size is one of these \Argument[argument color = blue]{options}.
+\end{example}
+
+\begin{Macrodef}{MArg}{\OArg{options}\MArg{name}}{}
+    ``MArg'' stands for \textit{mandatory argument} and is an \MacroRef{Argument} between braces. The same \Argument{options} for \MacroRef{Argument} also apply.
+\end{Macrodef}
+
+\begin{Macrodef}{OArg}{\OArg{options}\MArg{name}}{}
+    ``OArg'' stands for \textit{optional argument} and is an \MacroRef{Argument} between brackets. The same \Argument{options} for \MacroRef{Argument} also apply.
+\end{Macrodef}
+
+\begin{example}{}
+    Mandatory argument: \MArg{arg}.\par
+    Optional argument: \OArg{arg}.
+\end{example}
+
+Additionaly, arguments for arguments between angular brackets (\texttt{<>}) and plain text (\latexinline{{newcounter}}) are also available.
+
+\begin{Macrodef}{AArg}{\OArg{options}\MArg{name}}{}
+    ``AArg'' stands for \textit{optional argument between angular brackets}. The same \Argument{options} for \MacroRef{Argument} also apply.
+\end{Macrodef}
+
+\begin{example}{}
+    Class \PackageName{beamer} can use overlays in slides. For example, \AArg[argument color = red]{range} can be used in a itemized list and \Argument{range} can be set to \texttt{2} (only on slide 2) or \texttt{2-5} (from slide 2 to 5), for example.
+\end{example}
+
+\begin{Macrodef}{PArg}{\MArg{name}}{}
+    ``PArg'' stands for \textit{mandatory plain text argument} and is an \MacroRef{Argument} between brackets without any special format.
+\end{Macrodef}
+
+\begin{example}{}
+    Plain argument: \PArg{article}
 \end{example}
 
 
+\section{Elements}
 
-Some options to customize the element appearance are provided.
+An \textit{element} in the scope of this document refers to an item that can be highlighted and referenced, such as macros, options and environments, for example.
+
+To instance an element, the \MacroRef{DocsCreateElement} macro must be used.
+
+\DocsCreateElement{EnumItemOption}{
+    color = red!75!black,
+    arguments prefix = \texttt{~=~},
+    index heading = \texttt{EnumItemOption} example,
+    index remark = (\texttt{EnumItemOption} example),
+    no single index,
+    no group index,
+}
+\begin{Macrodef}{DocsCreateElement}{\MArg{element name}\MArg{element options}}{}
+    This macro creates a new element named \Argument{element name} and several other macros to use it. The \Argument{element options} are a key/value list of options to change how the item will look like.
+
+    \begin{latexcode}
+        \DocsCreateElement{EnumItemOption}{color = red!75!black}
+    \end{latexcode}
+
+    \begin{example}{}
+        I like to use the \PackageName{enumitem} package. It makes easier to fine tune the lists appearance, such as using \EnumItemOption{itemsep} or \EnumItemOption{parsep} to change the spaces between the items.
+    \end{example}
+
+    When an element is created, several other macros are created for different needs.
+
+    \begin{center}
+        \begin{tabular}{lp{4.3cm}l}
+            \textbf{Macro}                        & \textbf{Description}                                                                  & \textbf{Example}                        \\
+            \hline
+            \Macro{\Argument{element name}}       & Formats to element style.                                                             & \latexinline{\MyElement{a4paper}}       \\
+            \Macro{\Argument{element name}Def}    & Formats to element style, sets a label and index the element. & \latexinline{\MyElementDef{left}} \\
+            \Macro{\Argument{element name}Ref}    & Formats to element style and hyperlinks to the definition. & \latexinline{\MyElementRef{no align}} \\
+            \Macro{\Argument{element name}Ind}    & Formats to element style and index the element.  & \latexinline{\MyElementInd{showframe}} \\
+            \Macro{\Argument{element name}RefInd} & Formats to element style, hyperlinks to the definition and add an entry to the index. & \latexinline{\MyElementRefInd{a4paper}} \\
+            \Macro{\Argument{element name}Index}  & Index the element without any typeset.                                                & \latexinline{\MyElementIndex{element}}  \\
+        \end{tabular}
+    \end{center}
+\end{Macrodef}
+
+\begin{Macro*}{\Argument{element name}}{\OArg{options}\MArg{item}}{}
+    A macro named after \Argument{element name} is created to typeset \Argument{item} in a consistent way. The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsCreateElement}, but can be overridden with \Argument{options} (see \Cref{sec:options}).
+\end{Macro*}
+
+\begin{example}{}
+    I like to use the \PackageName{enumitem} package. It makes easier to fine tune lists, such as using \EnumItemOption{itemsep} or \EnumItemOption{parsep} to change the spaces between them items.
+\end{example}
+
+\begin{Macro*}{\Argument{element name}Def}{\OArg{options}\MArg{item}}{}
+    A macro \Macro{\Argument{element name}Def} is used to define an \Argument{item}, so it can be cross-referenced and have index entries. The definition can be referenced by the \Macro{\Argument{element name}Ref} macro.
+
+    The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsCreateElement}, but can be overridden with \Argument{options} (see \Cref{sec:options}).
+
+    The definition of an \Argument {item} can be stated with an environment called \hyperref[environmentdef]{\Environment{\Argument {element name}def}} instead.
+\end{Macro*}
+
+\begin{example}{}
+    I wrote some code to extend the \PackageName{enumitem} package. Now \EnumItemOptionDef{float} can be used to insert a list in a float.
+    % The name 'float' has an anchor (label) and entries in the index.
+\end{example}
+
+\begin{Macro*}{\Argument{element name}Ref}{\OArg{options}\MArg{text}}{}
+    The macro \Macro{\Argument{element name}Ref} typesets the \Argument{item} and creates a link to its definition.
+
+    The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsCreateElement}, but can be overridden with \Argument{options} (see \Cref{sec:options}).
+\end{Macro*}
+
+\begin{example}{}
+    Remember that the \EnumItemOptionRef{float} cannot be used if the list is already in a float.
+    % 'float' is a link to the definition
+\end{example}
+
+\begin{Macro*}{\Argument{element name}Ind}{\OArg{options}\MArg{item}}{}
+    The \Macro{\Argument{element name}} macro defines \Argument{item} and inserts entries to the index. Sometimes a secondary index entry is desired, so \Macro{\Argument{element name}Ind} does the job. A reference to the definition is not created.
+
+    The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsCreateElement}, but can be overridden with \Argument{options} (see \Cref{sec:options}).
+\end{Macro*}
+
+\begin{example}{}
+    Here we describe some other important information about the  \EnumItemOptionInd{float} option.
+    % 'float' has now new index entries, but it's not a link
+\end{example}
+
+\begin{Macro*}{\Argument{element name}RefInd}{\OArg{options}\MArg{text}}{}
+    The \Macro{\Argument{element name}RefInd} performs the job of both \Macro{\Argument{element name}Ind} and \Macro{\Argument{element name}Ind}, so the index is affected and a reference to the definition is created.
+
+    The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsCreateElement}, but can be overridden with \Argument{options} (see \Cref{sec:options}).
+\end{Macro*}
+
+\begin{example}{}
+    Here we describe some other important information about the  \EnumItemOptionRefInd{float} option.
+    % 'float' has now new index entries and is also a link
+\end{example}
+
+An element can be defined, as previously stated, by calling \Macro{\Argument{element name}Def}. This is handy for inline definitions. An alternative way to define an element is to use an environment also created by \MacroRef{DocsCreateElement}. This environment is named \Environment{\Argument{element name}def}.
+
+\begin{Environmentenv}{\Argument{element name}def}{\OArg{options}\MArg{item}\MArg{arguments}\MArg{complement}}{\Argument{element description}}
+    \label{environmentdef}
+    This environment uses \Argument{element name}'s styles to define an instance named \Argument{item}, along with its \Argument{arguments} and a \Argument{complement}. The \Argument{complement} is any additional text.
+
+    The header of the definition will use the following format:
+
+    \fbox{\Argument{item}\Argument{args prefix}\Argument {arguments}\Argument {complement prefix}\Argument {complement}}
+
+    The values for \Argument {args prefix} and \Argument {complement prefix} are set by \OptionRef{arguments prefix} and \OptionRef{complement prefix} options respectively.
+
+    This environment will create an anchor to \Argument {item} and add it to the index.
+\end{Environmentenv}
 
 
-\begin{Optiondef}{color}{\Argument{color}}{Initially: \latexinline{.!75}}
+\begin{example}{}
+    % args prefix is \texttt{~=~} and complement prefix is \hfill
+    \begin{EnumItemOptiondef}{float}{\texttt{true} | \texttt{false}}{Default: \texttt{true}; initially: \texttt{false}}
+        By adding \EnumItemOption{float} to a list, it will be inserted in a float environment.
+    \end{EnumItemOptiondef}
+    % This definition can be linked with \<element>Def and item is indexed
+\end{example}
+
+Another enviroment is available to just typeset an item, without creating an anchor and not adding entries to the index.
+
+\begin{Environmentenv}{\Argument{element name}*}{\OArg{options}\MArg{item}\MArg{arguments}\MArg{complement}}{\Argument{element description}}
+    The \Environment{\Argument{element name}env} environment has the same behavior as \Environment{\Argument{element name}env}, but no anchor is created and no entry is added to the index.
+\end{Environmentenv}
+
+\begin{example}{}
+    \begin{EnumItemOption*}{float}{\texttt{true} | \texttt{false}}{Default: \texttt{true}; initially: \texttt{false}}
+        By adding \EnumItemOption{float} to a list, it will be inserted in a float environment.
+    \end{EnumItemOption*}
+\end{example}
+
+
+\section{Options}\label{sec:options}
+
+Several options can be used to customize each element. These options are typically specified when the element is created with \MacroRef{DocsCreateElement}, but can also be modified with \MacroRef{DocsSetElement}. Options not specified at creation assume predefined default values, which can also be changed with \MacroRef{DocSet}.
+
+\begin{Macrodef}{DocsSetElement}{\MArg{element name}\MArg{option list}}{}
+    After created with \MacroRef{DocsCreateElement}, options can be changed \textit{a posteriori} with \Macro{DocsSetElement}
+\end{Macrodef}
+
+\begin{example}{}
+    \DocsCreateElement{MyItem}{color = magenta, no single index, no group index}
+    An example of MyItem is \MyItem{example}.\par
+    \DocsSetElement{MyItem}{color = blue!80!black, font = \slshape}
+    This is another one: \MyItem{instance}.
+\end{example}
+
+\begin{Optiondef}{package style}{\Argument {commands}}{Initially: \Macro{sffamily}}
+    Sets how \MacroRef{PackageName} will typeset classes and package names.
 \end{Optiondef}
 
-\begin{Optiondef}{font}{\Argument{font}}{Initially: \Macro{ttfamily}}
+\begin{Optiondef}{argument color}{\Argument {color}}{Inititally: \texttt{orange!50!black}}
+    Sets the color to typeset arguments (see \MacroRef{Argument}).
 \end{Optiondef}
 
-\begin{Optiondef}{index entry}{\Argument{text}}{Initially: \Argument{element name}}
+\begin{Optiondef}{prefix}{\Argument {text}}{Initially empty}
+    When an element is typeset, \Argument {text} is added before the item's name. For example, if an element is created for macros, \Option{prefix} can be set to \Macro{textbackslash}.
 \end{Optiondef}
 
-\begin{Optiondef}{index remark}{\Argument{text}}{Initially: \Argument{element name}}
+\begin{Optiondef}{arguments prefix}{\Argument{text}}{Initially empty}
+    This options sets the text to be put between the item name and its arguments. For macros, for example, it must be empty; for options it can be set to \texttt{=}.
+
+    This element is only typeset if the \Argument{arguments} are not empty (meaning anything with width equal to zero).
 \end{Optiondef}
 
-\begin{Optiondef}{prefix}{\Argument{text}}{Initially: \Empty}
+\begin{Optiondef}{complement prefix}{\Argument{text}}{Initially: \Macro{hfill}}
+    The contents of \Argument {text} will be inserted between the \Argument {arguments} and the \Argument {complement}.
+
+    This element is only typeset if the \Argument{complement} is not empty (meaning anything with width equal to zero).
 \end{Optiondef}
 
-\begin{Optiondef}{arguments prefix}{\Argument{text}}{Initially: \Empty}
+\begin{Optiondef}{font}{\Argument{commands}}{Initially: \Macro{ttfamily}}
+    These \Argument {commands} are prepended to every \Argument {item}.
 \end{Optiondef}
 
-\subsection{Creating elements}
+\begin{Optiondef}{color}{\Argument{color}}{Initially: \texttt{.!75}}
+    This sets the color to be used with the \Argument {item}.
+\end{Optiondef}
+
+\begin{Optiondef}{index heading}{\Argument {text}}{Initially: \Argument {element name}}
+    When an item is defined (\Macro{\Argument{element name}Def} macro or \hyperref[environmentdef]{\Environment{\Argument {element name}env}}), index entries will be grouped under a main entry named \Argument {text}.
+
+    Grouped index entries can be disabled with \OptionRef{no group index}.
+
+    This option is element-specific and will not work as a global option.
+\end{Optiondef}
+
+\begin{Optiondef}{no group index}{\texttt{true} | \texttt{false}}{Default: \texttt{true}; initially \texttt{true}}
+    This option suppresses adding entries as groups to the index. Single entries are not affected. 
+\end{Optiondef}
+
+\begin{Optiondef}{index remark}{\Argument {text}}{Default: \texttt{\DocsTilde(\Argument {element name})}}
+    Every index entry will be appended with \Argument {text} the item name.
+
+    Single entries can be removed with \OptionRef{no single index}.
+
+    This option is element-specific and will not work as a global option.
+\end{Optiondef}
+
+\begin{Optiondef}{no single index}{\texttt{true} | \texttt{false}}{Default: \texttt{true}; initially \texttt{true}}
+    This option suppresses adding single entries to the index. Group entries are not affected.
+\end{Optiondef}
 
 
-\section{Code examples}
+\begin{Optiondef}{}{}{}
+\end{Optiondef}
 
-Minted \texttt{outputdir}.
+\begin{Optiondef}{}{}{}
+\end{Optiondef}
 
+\begin{Optiondef}{}{}{}
+\end{Optiondef}
 
-\section{Indexing elements}
+\begin{Optiondef}{}{}{}
+\end{Optiondef}
 
+\begin{Optiondef}{}{}{}
+\end{Optiondef}
 
-\section{Version control}
+\begin{Optiondef}{}{}{}
+\end{Optiondef}
+
+\begin{Optiondef}{}{}{}
+\end{Optiondef}
+
+\begin{Optiondef}{}{}{}
+\end{Optiondef}
+
+\begin{Optiondef}{}{}{}
+\end{Optiondef}
+
+\begin{Optiondef}{}{}{}
+\end{Optiondef}
+
+\section{A full example}
 
 \printindex
 
