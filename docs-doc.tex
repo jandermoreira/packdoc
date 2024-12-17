@@ -217,7 +217,7 @@ An element can be defined, as previously stated, by calling \Macro{\Argument{ele
 Another environment is available to just typeset an item, without creating an anchor and not adding entries to the index.
 
 \begin{Environmentenv}{\Argument{element name}*}{\OArg{options}\MArg{item}\MArg{arguments}\MArg{complement}}{\Argument{element description}}
-    The \Environment{\Argument{element name}env} environment has the same behavior as \Environment{\Argument{element name}env}, but no anchor is created and no entry is added to the index.
+    The \Environment{\Argument{element name}env*} environment has the same behavior as \Environment{\Argument{element name}env}, but no anchor is created and no entry is added to the index.
 \end{Environmentenv}
 
 \begin{example}{}
@@ -286,7 +286,7 @@ Several options can be used to customize each element. These options are typical
     This option suppresses adding entries as groups to the index. Single entries are not affected.
 \end{Optiondef}
 
-\begin{Optiondef}{index remark}{\Argument {text}}{Default: \texttt{\DocsTilde(\Argument {element name})}}
+\begin{Optiondef}{index remark}{\Argument {text}}{Default: \texttt{\{\DocsTilde(\Argument{element name})\}}}
     Every index entry will be appended with \Argument {text} the item name.
 
     Single entries can be removed with \OptionRef{no single index}.
