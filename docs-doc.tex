@@ -1,7 +1,7 @@
 %! Author = Jander Moreira
 %! Date = 2024
 
-\documentclass[11pt, outputdir = ./out]{article}
+\documentclass[11pt, outdir = ./out]{article}
 \usepackage[T1]{fontenc}
 
 \usepackage{docs}
@@ -19,6 +19,7 @@
 
 \DocsPrintChanges
 
+
 \section{Introduction}
 
 \DocsAddChange {0.1}{
@@ -26,74 +27,74 @@
     no box,
     no listing,
 }%
-This package is\ldots
+The \PackageName{docs} package was developed to assist in the writing of documents or manuals that use \LaTeX. The intention is to simplify the documentation process by providing standardized formatting for key components. This includes the ability to describe the syntax and functionality of macros and environments, as well as available options and their usage. Additionally, the package facilitates the inclusion of elements such as index entries, ensuring a clear and consistent structure throughout the text.
+
+This package is not intended to replace or compete with the use of \texttt{.dtx} and \texttt{.ins} files, which is an important strategy for writing \texttt{.sty} files. The development of a package and its documentation should be done independently. A very personal reason for this approach is that my background is in Computer Science, and, as such, I have a strong inclination towards writing well-formatted and well-documented code. Therefore, in the end, while the style file created from \texttt{.dtx} and .ins files is functional, it often lacks attention to the elegance in the look of the code. For this reason, I write \texttt{.sty} files and their documentation completely separately.
 
 
 \section {Documentation}
 
+This package offers the capability to document commands and environments, in addition to supporting versioning through a change log.
+
 \subsection{Package usage and options}
-To use the \PackageName{docs} package just load it.
+To use this package, it must be loaded with \Macro{usepackage}. In this initial version, no options are available.
 
 \begin{latexcode}
     \usepackage{docs}
 \end{latexcode}
 
-
 \subsection{Basic commands}
 
-A series of macros are provided to typeset things consistently.
+A set of useful macros is provided to facilitate the creation of consistent and well-organized documents. These macros help streamline repetitive tasks and ensure uniform formatting across the document.
 
 \begin{Macrodef}{PackageName}{\OArg{options}\MArg{name}}{}
-    This macro is intended to typeset \Argument{name} as the name of \LaTeX\ packages and classes, such as \PackageName{amsmath} and \PackageName{article}.
-
-    The optional \Argument{options} can be used to locally change the style used for package names by changing \OptionRef{package style}.
+    This macro is designed to format \Argument {name} as the name of \LaTeX packages and classes, such as \PackageName{amsmath} or \PackageName{article}. The optional argument \Argument{options} allows for local adjustments to the style used for package names by modifying the \OptionRef{package style}.
 \end{Macrodef}
 
-\begin{example}{}
-    Useful packages are \PackageName{graphicx} and \PackageName{colorx}, for example. Also \PackageName[package style = \scshape\color{blue}]{babel} and \PackageName{inputenc} are important.
-\end{example}
+\begin{DocsExample}
+    Examples of useful packages include \PackageName{graphicx} and \PackageName{xcolor}. Additionally, \PackageName[package style=\scshape\color{blue}]{babel} and \PackageName{inputenc} are also important.
+\end{DocsExample}
 
 \begin{Macrodef}{Argument}{\OArg{options}\MArg{name}}{}
-    The \Macro{Argument} macro is used to typeset arguments.
+    The \Macro{Argument} macro is used to format generic arguments.
 
-    With the option \OptionRef{argument color} the color of the argument can be changed. For now, font, size and shape for arguments are hardcoded and cannot be modified.
+    The optional \OptionRef{argument color} allows the color of the argument to be customized. However, the font, size, and shape of arguments are currently hardcoded and cannot be adjusted.
 \end{Macrodef}
 
-\begin{example}{}
-    The \PackageName{article} class can use \Argument{options} (see \Cref{sec:options-for-elements}). The paper size is one of these \Argument[argument color = blue]{options}.
-\end{example}
+\begin{DocsExample}
+    The \PackageName{article} class supports \Argument{options}, including settings like paper size and the number of columns.
+\end{DocsExample}
 
 \begin{Macrodef}{MArg}{\OArg{options}\MArg{name}}{}
-    ``MArg'' stands for \textit{mandatory argument} and is an \MacroRef{Argument} between braces. The same \Argument{options} for \MacroRef{Argument} also apply.
+    ``MArg'' means \textit{mandatory argument}, and the result is the same as \MacroRef{Argument} enclosed in braces. The same \Argument{options} available for \MacroRef{Argument} also apply.
 \end{Macrodef}
 
 \begin{Macrodef}{OArg}{\OArg{options}\MArg{name}}{}
-    ``OArg'' stands for \textit{optional argument} and is an \MacroRef{Argument} between brackets. The same \Argument{options} for \MacroRef{Argument} also apply.
+    ``OArg'' stands for \textit{optional argument}, and the result is the same as \MacroRef{Argument} enclosed in square brackets. The same \Argument{options} available for \MacroRef{Argument} also apply.
 \end{Macrodef}
 
-\begin{example}{}
+\begin{DocsExample}
     Mandatory argument: \MArg{arg}.\par
     Optional argument: \OArg{arg}.
-\end{example}
+\end{DocsExample}
 
-Additionaly, arguments for arguments between angular brackets (\texttt{<>}) and plain text (\latexinline{{newcounter}}) are also available.
+Additionally, macros for arguments between angle brackets (e.g., \texttt{<\Option{color}~=~blue>}) and plain text (e.g., \latexinline{{newcounter}}) are also available.
 
 \begin{Macrodef}{AArg}{\OArg{options}\MArg{name}}{}
     ``AArg'' stands for \textit{optional argument between angular brackets}. The same \Argument{options} for \MacroRef{Argument} also apply.
 \end{Macrodef}
 
-\begin{example}{}
+\begin{DocsExample}
     Class \PackageName{beamer} can use overlays in slides. For example, \AArg[argument color = red]{range} can be used in a itemized list and \Argument{range} can be set to \texttt{2} (only on slide 2) or \texttt{2-5} (from slide 2 to 5), for example.
-\end{example}
+\end{DocsExample}
 
 \begin{Macrodef}{PArg}{\MArg{name}}{}
     ``PArg'' stands for \textit{mandatory plain text argument} and is an \MacroRef{Argument} between brackets without any special format.
 \end{Macrodef}
 
-\begin{example}{}
+\begin{DocsExample}
     Plain argument: \PArg{article}
-\end{example}
-
+\end{DocsExample}
 
 \subsection{Elements}
 
@@ -116,15 +117,15 @@ To instance an element, the \MacroRef{DocsNewElement} macro must be used.
         \DocsNewElement{EnumItemOption}{color = red!75!black}
     \end{latexcode}
 
-    \begin{example}{}
+    \begin{DocsExample}
         I like to use the \PackageName{enumitem} package. It makes easier to fine tune the lists appearance, such as using \EnumItemOption{itemsep} or \EnumItemOption{parsep} to change the spaces between the items.
-    \end{example}
+    \end{DocsExample}
 
     When an element is created, several other macros are created for different needs.
 
     \begin{center}
         \begin{tabular}{lp{4.3cm}l}
-            \textbf{Macro}                        & \textbf{Description}                                                                  & \textbf{Ex0.1}                        \\
+            \textbf{Macro}                        & \textbf{Description}                                                                  & \textbf{Ex0.1}                          \\
             \hline
             \Macro{\Argument{element name}}       & Formats to element style.                                                             & \latexinline{\MyElement{a4paper}}       \\
             \Macro{\Argument{element name}Def}    & Formats to element style, sets a label and index the element. & \latexinline{\MyElementDef{left}} \\
@@ -140,9 +141,9 @@ To instance an element, the \MacroRef{DocsNewElement} macro must be used.
     A macro named after \Argument{element name} is created to typeset \Argument{item} in a consistent way. The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
 \end{Macro*}
 
-\begin{example}{}
+\begin{DocsExample}
     I like to use the \PackageName{enumitem} package. It makes easier to fine tune lists, such as using \EnumItemOption{itemsep} or \EnumItemOption{parsep} to change the spaces between them items.
-\end{example}
+\end{DocsExample}
 
 \begin{Macro*}{\Argument{element name}Def}{\OArg{options}\MArg{item}}{}
     A macro \Macro{\Argument{element name}Def} is used to define an \Argument{item}, so it can be cross-referenced and have index entries. The definition can be referenced by the \Macro{\Argument{element name}Ref} macro.
@@ -152,10 +153,10 @@ To instance an element, the \MacroRef{DocsNewElement} macro must be used.
     The definition of an \Argument {item} can be stated with an environment called \hyperref[environmentdef]{\Environment{\Argument {element name}def}} instead.
 \end{Macro*}
 
-\begin{example}{}
+\begin{DocsExample}
     I wrote some code to extend the \PackageName{enumitem} package. Now \EnumItemOptionDef{float} can be used to insert a list in a float.
     % The name 'float' has an anchor (label) and entries in the index.
-\end{example}
+\end{DocsExample}
 
 \begin{Macro*}{\Argument{element name}Ref}{\OArg{options}\MArg{text}}{}
     The macro \Macro{\Argument{element name}Ref} typesets the \Argument{item} and creates a link to its definition.
@@ -163,10 +164,10 @@ To instance an element, the \MacroRef{DocsNewElement} macro must be used.
     The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
 \end{Macro*}
 
-\begin{example}{}
+\begin{DocsExample}
     Remember that the \EnumItemOptionRef{float} cannot be used if the list is already in a float.
     % 'float' is a link to the definition
-\end{example}
+\end{DocsExample}
 
 \begin{Macro*}{\Argument{element name}Ind}{\OArg{options}\MArg{item}}{}
     The \Macro{\Argument{element name}} macro defines \Argument{item} and inserts entries to the index. Sometimes a secondary index entry is desired, so \Macro{\Argument{element name}Ind} does the job. A reference to the definition is not created.
@@ -174,10 +175,10 @@ To instance an element, the \MacroRef{DocsNewElement} macro must be used.
     The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
 \end{Macro*}
 
-\begin{example}{}
+\begin{DocsExample}
     Here we describe some other important information about the  \EnumItemOptionInd{float} option.
     % 'float' has now new index entries, but it's not a link
-\end{example}
+\end{DocsExample}
 
 \begin{Macro*}{\Argument{element name}RefInd}{\OArg{options}\MArg{text}}{}
     The \Macro{\Argument{element name}RefInd} performs the job of both \Macro{\Argument{element name}Ind} and \Macro{\Argument{element name}Ind}, so the index is affected and a reference to the definition is created.
@@ -185,10 +186,10 @@ To instance an element, the \MacroRef{DocsNewElement} macro must be used.
     The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
 \end{Macro*}
 
-\begin{example}{}
+\begin{DocsExample}
     Here we describe some other important information about the  \EnumItemOptionRefInd{float} option.
     % 'float' has now new index entries and is also a link
-\end{example}
+\end{DocsExample}
 
 An element can be defined, as previously stated, by calling \Macro{\Argument{element name}Def}. This is handy for inline definitions. An alternative way to define an element is to use an environment also created by \MacroRef{DocsNewElement}. This environment is named \Environment{\Argument{element name}def}.
 
@@ -206,13 +207,13 @@ An element can be defined, as previously stated, by calling \Macro{\Argument{ele
 \end{Environmentenv}
 
 
-\begin{example}{}
+\begin{DocsExample}
     % args prefix is \texttt{~=~} and complement prefix is \hfill
     \begin{EnumItemOptiondef}{float}{\texttt{true} | \texttt{false}}{Default: \texttt{true}; initially: \texttt{false}}
         By adding \EnumItemOption{float} to a list, it will be inserted in a float environment.
     \end{EnumItemOptiondef}
     % This definition can be linked with \<element>Def and item is indexed
-\end{example}
+\end{DocsExample}
 
 Another environment is available to just typeset an item, without creating an anchor and not adding entries to the index.
 
@@ -220,12 +221,11 @@ Another environment is available to just typeset an item, without creating an an
     The \Environment{\Argument{element name}env*} environment has the same behavior as \Environment{\Argument{element name}env}, but no anchor is created and no entry is added to the index.
 \end{Environmentenv}
 
-\begin{example}{}
+\begin{DocsExample}
     \begin{EnumItemOption*}{float}{\texttt{true} | \texttt{false}}{Default: \texttt{true}; initially: \texttt{false}}
         By adding \EnumItemOption{float} to a list, it will be inserted in a float environment.
     \end{EnumItemOption*}
-\end{example}
-
+\end{DocsExample}
 
 \subsection{Options for elements}\label{sec:options-for-elements}
 
@@ -235,12 +235,12 @@ Several options can be used to customize each element. These options are typical
     After created with \MacroRef{DocsNewElement}, options can be changed \textit{a posteriori} with \Macro{DocsSetElement}
 \end{Macrodef}
 
-\begin{example}{}
+\begin{DocsExample}
     \DocsNewElement{MyItem}{color = magenta, no single index, no group index}
-    An example of MyItem is \MyItem{example}.\par
+    An example of MyItem is \MyItem{DocsExample}.\par
     \DocsSetElement{MyItem}{color = blue!80!black, font = \slshape}
     This is another one: \MyItem{instance}.
-\end{example}
+\end{DocsExample}
 
 \begin{Optiondef}{package style}{\Argument {commands}}{Initially: \Macro{sffamily}}
     Sets how \MacroRef{PackageName} will typeset classes and package names.
@@ -304,21 +304,21 @@ When \PackageName{docs} is loaded with the \OptionRef{presets} option, some usef
 
 \bigskip
 \begin{tabular}{ll}
-    \textbf{Element name} & \textbf{Description}\\
+    \textbf{Element name} & \textbf{Description}                                   \\
     \hline
-    \texttt{Option} & To use with options (as those passed within brackets). \\
-    \texttt{Macro} & For macros, preceding them with a backslash. \\
-    \texttt{Environment} & For general environments. \\
+    \texttt{Option}       & To use with options (as those passed within brackets). \\
+    \texttt{Macro}        & For macros, preceding them with a backslash.           \\
+    \texttt{Environment}  & For general environments.                              \\
 \end{tabular}
 
 \bigskip
 This document used these presets.
 
-\begin{example}{}
+\begin{DocsExample}
     The preset elements include \Option{option}, \Macro{macro} and \Environment{environment}.
 
     For example, \OptionRef{presets} is a package option. The \MacroRef{DocsNewElement} macro is used to create new elements and \Environment{tabular} is a well known environment.
-\end{example}
+\end{DocsExample}
 
 
 \section{Change history support}
@@ -332,55 +332,55 @@ This document used these presets.
 \DocsNewVersion{Ex0.1a}{2023}
 \DocsNewVersion{Ex0.2}{2024}
 
-\begin{example}{}
+\begin{DocsExample}
     \DocsAddChange{Ex0.1}{
-        description = {Initial \textbf{example} version.},
+        description = {Initial \textbf{DocsExample} version.},
         no page,  % no page number
         no box,  % no box in margin
     }%
     The version \textbf{Ex} is just an example, released as \textbf{Ex0.1}. Some importante fixes lead to \textbf{Ex0.1a} and new features were added in \textbf{Ex0.2}.
-\end{example}
+\end{DocsExample}
 
-\begin{example}{}
+\begin{DocsExample}
     \DocsAddChange{Ex0.1a}{
-        description = {\Macro{ExLang} added to support new languages \textbf{example}.},
+        description = {\Macro{ExLang} added to support new languages \textbf{DocsExample}.},
     }%
     The \Macro{ExLang} macro is used to allow keywords translation.
-\end{example}
+\end{DocsExample}
 
-\begin{example}{}
+\begin{DocsExample}
     \DocsAddChange{Ex0.1a}{
-        description = {\Macro{ExSet} fixed to handle spaces \textbf{example}.},
+        description = {\Macro{ExSet} fixed to handle spaces \textbf{DocsExample}.},
         updated,
     }%
     Use \Macro{ExSet} to set global options.
-\end{example}
+\end{DocsExample}
 
-\begin{example}{}
+\begin{DocsExample}
     \DocsAddChange{Ex0.1a}{
-        description = {\Macro{ExOld} is deprecated \textbf{example}.},
+        description = {\Macro{ExOld} is deprecated \textbf{DocsExample}.},
         deprecated,
     }%
     Use \Macro{ExOld} will no longer be updated. Don't use it anymore.
-\end{example}
+\end{DocsExample}
 
-\begin{example}{}
+\begin{DocsExample}
     \DocsAddChange{Ex0.2}{
-        description = {\Macro{ExReallyOld} is no longer present in the package \textbf{example}.},
+        description = {\Macro{ExReallyOld} is no longer present in the package \textbf{DocsExample}.},
         removed,
     }%
     \Macro{ExReallyOld} was removed. This will break older documents.
-\end{example}
+\end{DocsExample}
 
-\begin{example}{}
+\begin{DocsExample}
     \DocsAddChange{Ex0.1a}[\Option{invisible}]{
-        description = {New option: \Option{invisible} \textbf{example}.},
+        description = {New option: \Option{invisible} \textbf{DocsExample}.},
         new,  % optional
     }%
     Package options are \Option{framed}, \Option{nolinks} and \Option{invisible}.
-\end{example}
+\end{DocsExample}
 
-\begin{example}{}
+\begin{DocsExample}
     \DocsAddChange{Ex0.1a}[\Option{framed}]{
         updated,
         no listing,  % this won't appear in the change history
@@ -388,11 +388,11 @@ This document used these presets.
     Package options are \Option{framed}, \Option{nolinks} and \Option{invisible}.
 
     \DocsAddChange{Ex0.2}{
-        description = {The code for handling CSV lists was completely rewritten \textbf{example}.},
+        description = {The code for handling CSV lists was completely rewritten \textbf{DocsExample}.},
         no box,  % no box in the margin, but description goes the change history
     }%
     All elements in this package use comma-separated lists.
-\end{example}
+\end{DocsExample}
 
 \printindex
 
