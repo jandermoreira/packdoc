@@ -8,10 +8,19 @@
 \NewDocumentCommand{\DocsVersion}{}{v0.1}
 \NewDocumentCommand{\DocsDate}{}{2024/10/27}
 
+\RequirePackage{pgfopts}
+
 \RequirePackage{etoolbox}
+\newbool{docs@UsePresets}
+\pgfkeys{
+    docs/.cd,
+    presets/.is if = docs@UsePresets,
+}
+\ProcessPgfOptions{/docs}
+
 \appto{\ttfamily}{\frenchspacing}{}{}
 \appto{\tableofcontents}{\bigskip}
-\RequirePackage{todonotes}
+\RequirePackage{snaptodo}
 \RequirePackage{marginnote}
 \setlength{\marginparwidth}{3cm}
 
@@ -34,8 +43,6 @@
     citecolor = black!80,
 }
 
-\RequirePackage{cleveref}
-
 \RequirePackage{makeidx}
 \makeindex
 
@@ -44,7 +51,8 @@
 \newmintinline{latex}{}
 
 \RequirePackage{tcolorbox}
-\tcbuselibrary{skins, listings, minted, breakable}
+\tcbuselibrary{most, minted}
+
 \newbool{docs@InExample}
 \tcbset{
     description/.style = {
@@ -72,24 +80,23 @@
         sharp corners,
         box align = top,
         boxrule = 1pt,
-        %fontupper = \footnotesize,
-        %fontlower = \footnotesize,
+        fontupper = \footnotesize,
+        fontlower = \footnotesize,
+        listing engine = minted,
         minted options = {
             fontsize = \footnotesize,
             breaklines,
             autogobble,
         },
-        listing engine = minted,
         before lower = {\booltrue{docs@InExample}},
         after lower = {\boolfalse{docs@InExample}},
     }
 }
-\newtcblisting{example}[1]{
-    example,
-    #1
-}
+\newtcblisting{DocsExample}{example}
 
-%% Support code
+\RequirePackage{cleveref}
+
+% Support code
 
 \ExplSyntaxOn
 \seq_new:N \g_docs_list_of_elements_seq
@@ -399,28 +406,29 @@
     \end{elementenv*}
 }
 
-\definecolor{docs@OptionColor}{HTML}{687821}
-\colorlet{docs@EnvironmentColor}{brown!80!magenta}
-\colorlet{docs@MacroColor}{green!50!black}
+\ifbool{docs@UsePresets}{
+    \definecolor{docs@OptionColor}{HTML}{687821}
+    \colorlet{docs@EnvironmentColor}{brown!80!magenta}
+    \colorlet{docs@MacroColor}{green!50!black}
 
-\DocsNewElement{Option}{
-    color = docs@OptionColor,
-    arguments prefix = \texttt{ = },
-    index heading = Options,
-    index remark = ~(option),
-}
-\DocsNewElement{Macro}{
-    prefix = \textbackslash,
-    color = docs@MacroColor,
-    index heading = Macros,
-    index remark = ~(macro),
-}
-\DocsNewElement{Environment}{
-    color = docs@EnvironmentColor,
-    index heading = Environments,
-    index remark = ~(environment),
-}
-
+    \DocsNewElement{Option}{
+        color = docs@OptionColor,
+        arguments prefix = \texttt{ = },
+        index heading = Options,
+        index remark = ~(option),
+    }
+    \DocsNewElement{Macro}{
+        prefix = \textbackslash,
+        color = docs@MacroColor,
+        index heading = Macros,
+        index remark = ~(macro),
+    }
+    \DocsNewElement{Environment}{
+        color = docs@EnvironmentColor,
+        index heading = Environments,
+        index remark = ~(environment),
+    }
+}{}
 
 %%%%%%%%%%%%%%%%%%
 
@@ -571,6 +579,7 @@
     type/.is choice,
     type/new/.code = {\docs@SetChangeAttribute{type}{New in}},
     type/updated/.code = {\docs@SetChangeAttribute{type}{Updated in}},
+    type/changed/.code = {\docs@SetChangeAttribute{type}{Changed in}},
     type/removed/.code = {\docs@SetChangeAttribute{type}{Removed in}},
     type/deprecated/.code = {\docs@SetChangeAttribute{type}{Deprecated in}},
     .unknown/.code = {\pgfkeysalso{type = \pgfkeyscurrentname}},
@@ -614,14 +623,18 @@
         \docs@GetChangeInfo{\docs@CurrentChangeCounter}{label}[\docs@InfoResult]%
         \expandafter\label\expandafter{\docs@InfoResult:change}%
         \ifbool{docs@HideBox}{}{%
-            \reversemarginpar%
-            \ifbool{docs@InExample}{\let\marginpar\marginnote}{}%
-            \tikzset{
-                notestyleraw/.append style = {rounded corners = 0pt, inner sep = 2pt},
-            }%
-            \todo[bordercolor = blue!20, backgroundcolor = blue!10,
-                linecolor = blue!20, tickmarkheight = 0.2ex, size = \scriptsize,
-                noline, nolist, #4]{%
+            %\reversemarginpar%
+            %\ifbool{docs@InExample}{\let\marginpar\marginnote}{}%
+            %\tikzset{
+            %    notestyleraw/.append style = {rounded corners = 0pt, inner sep = 2pt},
+            %}%
+            \snaptodo[
+                block sep = -0.2ex,
+                call chain/.style = {draw = none},
+                margin block/.style = {font = \tiny, blue!75!black},
+                chain bias = -99in,  % force to left margin
+                #4
+            ]{%
                 \IfValueT{#2}{\textbf{#2}:\\}{}%
                 \scshape%
                 \docs@GetChangeInfo{\docs@CurrentChangeCounter}{type}

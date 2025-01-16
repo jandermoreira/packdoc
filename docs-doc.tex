@@ -4,29 +4,28 @@
 \documentclass[11pt, outdir = ./out]{article}
 \usepackage[T1]{fontenc}
 
-\usepackage{docs}
+\usepackage[presets]{docs}
 
 \title{The \PackageName{docs} package\footnote{This document is refers to the package version \DocsVersion, dated \DocsDate. Compilation date: \today.}}
 \author{Jander Moreira -- \texttt{moreira.jander@gmail.com}}
 \date{October 27, 2024}
 
 \begin{document}
-\maketitle
 
+\maketitle
 \tableofcontents
 
 \DocsNewVersion{0.1}{2024/12/04}
-
+\DocsAddChange {0.1}{
+    description = {Initial version.},
+    no box,
+    no listing,
+}
 \DocsPrintChanges
 
 
 \section{Introduction}
 
-\DocsAddChange {0.1}{
-    description = {Initial version.},
-    no box,
-    no listing,
-}%
 The \PackageName{docs} package was developed to assist in the writing of documents or manuals that use \LaTeX. The intention is to simplify the documentation process by providing standardized formatting for key components. This includes the ability to describe the syntax and functionality of macros and environments, as well as available options and their usage. Additionally, the package facilitates the inclusion of elements such as index entries, ensuring a clear and consistent structure throughout the text.
 
 This package is not intended to replace or compete with the use of \texttt{.dtx} and \texttt{.ins} files, which is an important strategy for writing \texttt{.sty} files. The development of a package and its documentation should be done independently. A very personal reason for this approach is that my background is in Computer Science, and, as such, I have a strong inclination towards writing well-formatted and well-documented code. Therefore, in the end, while the style file created from \texttt{.dtx} and .ins files is functional, it often lacks attention to the elegance in the look of the code. For this reason, I write \texttt{.sty} files and their documentation completely separately.
@@ -37,11 +36,13 @@ This package is not intended to replace or compete with the use of \texttt{.dtx}
 This package offers the capability to document commands and environments, in addition to supporting versioning through a change log.
 
 \subsection{Package usage and options}
-To use this package, it must be loaded with \Macro{usepackage}. In this initial version, no options are available.
+To use this package, it must be loaded with \Macro{usepackage}.
 
 \begin{latexcode}
     \usepackage{docs}
 \end{latexcode}
+
+So far there is only one option to the package: \OptionRef{presets}. This is covered in \Cref{sec:preset-elements}.
 
 \subsection{Basic commands}
 
@@ -298,21 +299,25 @@ Several options can be used to customize each element. These options are typical
     This option suppresses adding single entries to the index. Group entries are not affected.
 \end{Optiondef}
 
-\subsection{Preset elements}
+\subsection{Preset elements}\label{sec:preset-elements}
 
-When \PackageName{docs} is loaded with the \OptionRef{presets} option, some useful elements are automatically created.
 
-\bigskip
-\begin{tabular}{ll}
-    \textbf{Element name} & \textbf{Description}                                   \\
-    \hline
-    \texttt{Option}       & To use with options (as those passed within brackets). \\
-    \texttt{Macro}        & For macros, preceding them with a backslash.           \\
-    \texttt{Environment}  & For general environments.                              \\
-\end{tabular}
+\begin{Optiondef}{presets}{\texttt{true} | \texttt{false}}{Default: \texttt{false}; initially: \texttt{false}}
+    When \PackageName{docs} is loaded with the \OptionRef{presets} option, some useful elements are automatically created.
 
-\bigskip
-This document used these presets.
+    \bigskip
+    \begin{tabular}{ll}
+        \textbf{Element name} & \textbf{Description}                                   \\
+        \hline
+        \texttt{Option}       & To use with options (as those passed within brackets). \\
+        \texttt{Macro}        & For macros, preceding them with a backslash.           \\
+        \texttt{Environment}  & For general environments.                              \\
+    \end{tabular}
+
+    \bigskip
+    This document used these presets.
+\end{Optiondef}
+
 
 \begin{DocsExample}
     The preset elements include \Option{option}, \Macro{macro} and \Environment{environment}.
