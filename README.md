@@ -4,7 +4,9 @@ This package offers a variety of features for documenting $\LaTeX$ packages, ens
 ## How to use
 Copy `docs.sty` in your $\TeX$ path.
 
-From CTAN: https://ctan.org/pkg/docs
+CTAN: https://ctan.org/pkg/docs
+
+Github: https://github.com/jandermoreira/docs
 
 ## Licence
 Copyright (C) 2025 by Jander Moreira (moreira.jander@gmail.com)
