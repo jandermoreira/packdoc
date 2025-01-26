@@ -6,9 +6,13 @@
 
 \usepackage[presets]{docs}
 
-\title{The \PackageName{docs} package\footnote{This document is refers to the package version \DocsVersion, dated \DocsDate. Compilation date: \today.}}
-\author{Jander Moreira -- \texttt{moreira.jander@gmail.com}}
-\date{October 27, 2024}
+\title{The \PackageName{docs} package\\\normalsize\textsf{\DocsVersion}}
+\author{%
+    Jander Moreira\\%
+    \texttt{moreira.jander@gmail.com}\\%
+    \url{https://github.com/jandermoreira/docs}%
+}
+\date{\DocsDate}
 
 \begin{document}
 
@@ -19,7 +23,7 @@
 \DocsAddChange {0.1}{
     description = {Initial version.},
     no box,
-    no listing,
+    no page,
 }
 \DocsPrintChanges
 
@@ -28,25 +32,23 @@
 
 The \PackageName{docs} package was developed to assist in the writing of documents or manuals that use \LaTeX. The intention is to simplify the documentation process by providing standardized formatting for key components. This includes the ability to describe the syntax and functionality of macros and environments, as well as available options and their usage. Additionally, the package facilitates the inclusion of elements such as index entries, ensuring a clear and consistent structure throughout the text.
 
-This package is not intended to replace or compete with the use of \texttt{.dtx} and \texttt{.ins} files, which is an important strategy for writing \texttt{.sty} files. The development of a package and its documentation should be done independently. A very personal reason for this approach is that my background is in Computer Science, and, as such, I have a strong inclination towards writing well-formatted and well-documented code. Therefore, in the end, while the style file created from \texttt{.dtx} and .ins files is functional, it often lacks attention to the elegance in the look of the code. For this reason, I write \texttt{.sty} files and their documentation completely separately.
+This package is not intended to replace or compete with the use of \FileName{.dtx} and \FileName{.ins} files, which is an important strategy for writing \FileName{.sty} files. The development of a package and its documentation should be done independently. A very personal reason for this approach is that my background is in Computer Science, and, as such, I have a strong inclination towards writing well-formatted and well-documented code. Therefore, in the end, while the style file created from \FileName{.dtx} and .ins files is functional, it often lacks attention to the elegance in the look of the code. For this reason, I write \FileName{.sty} files and their documentation completely separately.
+
+This package offers the capability to document commands and environments, in addition to supporting versioning through a change log.
+
+\section{Package usage and options}
+To use this package, it must be loaded with \Macro{usepackage}.
+
+\begin{Macro*}{usepackage}{\OArg{options}\PArg{docs}}{}
+    So far there is only one option to the package: \OptionRef{presets}. This is covered in \Cref{sec:preset-elements}.
+\end{Macro*}
 
 
 \section {Documentation}
 
-This package offers the capability to document commands and environments, in addition to supporting versioning through a change log.
-
-\subsection{Package usage and options}
-To use this package, it must be loaded with \Macro{usepackage}.
-
-\begin{latexcode}
-    \usepackage{docs}
-\end{latexcode}
-
-So far there is only one option to the package: \OptionRef{presets}. This is covered in \Cref{sec:preset-elements}.
-
 \subsection{Basic commands}
 
-A set of useful macros is provided to facilitate the creation of consistent and well-organized documents. These macros help streamline repetitive tasks and ensure uniform formatting across the document.
+A set of useful macros is provided to facilitate the creation of consistent documents and ensure uniform formatting across the text.
 
 \begin{Macrodef}{PackageName}{\OArg{options}\MArg{name}}{}
     This macro is designed to format \Argument {name} as the name of \LaTeX packages and classes, such as \PackageName{amsmath} or \PackageName{article}. The optional argument \Argument{options} allows for local adjustments to the style used for package names by modifying the \OptionRef{package style}.
@@ -79,14 +81,14 @@ A set of useful macros is provided to facilitate the creation of consistent and 
     Optional argument: \OArg{arg}.
 \end{DocsExample}
 
-Additionally, macros for arguments between angle brackets (e.g., \texttt{<\Option{color}~=~blue>}) and plain text (e.g., \latexinline{{newcounter}}) are also available.
+Additionally, macros for arguments between angle brackets (e.g., \texttt{<\Option{color} = blue>}) and plain text (e.g., \DocsInline{{newcounter}}) are also available.
 
 \begin{Macrodef}{AArg}{\OArg{options}\MArg{name}}{}
     ``AArg'' stands for \textit{optional argument between angular brackets}. The same \Argument{options} for \MacroRef{Argument} also apply.
 \end{Macrodef}
 
 \begin{DocsExample}
-    Class \PackageName{beamer} can use overlays in slides. For example, \AArg[argument color = red]{range} can be used in a itemized list and \Argument{range} can be set to \texttt{2} (only on slide 2) or \texttt{2-5} (from slide 2 to 5), for example.
+    Class \PackageName{beamer} can use overlays in slides. For example, \AArg[argument color = red]{range} can be used in a itemized list and \Argument{range} can be set to \DocsInline{2} (only on slide 2) or \DocsInline{2-5} (from slide 2 to 5), for example.
 \end{DocsExample}
 
 \begin{Macrodef}{PArg}{\MArg{name}}{}
@@ -113,30 +115,31 @@ To instance an element, the \MacroRef{DocsNewElement} macro must be used.
 }
 \begin{Macrodef}{DocsNewElement}{\MArg{element name}\MArg{element options}}{}
     This macro creates a new element named \Argument{element name} and several other macros to use it. The \Argument{element options} are a key/value list of options to change how the item will look like.
-
-    \begin{latexcode}
-        \DocsNewElement{EnumItemOption}{color = red!75!black}
-    \end{latexcode}
-
-    \begin{DocsExample}
-        I like to use the \PackageName{enumitem} package. It makes easier to fine tune the lists appearance, such as using \EnumItemOption{itemsep} or \EnumItemOption{parsep} to change the spaces between the items.
-    \end{DocsExample}
-
-    When an element is created, several other macros are created for different needs.
-
-    \begin{center}
-        \begin{tabular}{lp{4.3cm}l}
-            \textbf{Macro}                        & \textbf{Description}                                                                  & \textbf{Ex0.1}                          \\
-            \hline
-            \Macro{\Argument{element name}}       & Formats to element style.                                                             & \latexinline{\MyElement{a4paper}}       \\
-            \Macro{\Argument{element name}Def}    & Formats to element style, sets a label and index the element. & \latexinline{\MyElementDef{left}} \\
-            \Macro{\Argument{element name}Ref}    & Formats to element style and hyperlinks to the definition. & \latexinline{\MyElementRef{no align}} \\
-            \Macro{\Argument{element name}Ind}    & Formats to element style and index the element.  & \latexinline{\MyElementInd{showframe}} \\
-            \Macro{\Argument{element name}RefInd} & Formats to element style, hyperlinks to the definition and add an entry to the index. & \latexinline{\MyElementRefInd{a4paper}} \\
-            \Macro{\Argument{element name}Index}  & Index the element without any typeset.                                                & \latexinline{\MyElementIndex{element}}  \\
-        \end{tabular}
-    \end{center}
 \end{Macrodef}
+
+\begin{DocsListing}
+    \DocsNewElement{EnumItemOption}{color = red!75!black}
+\end{DocsListing}
+
+\begin{DocsExample}
+    I like to use the \PackageName{enumitem} package. It makes easier to fine tune the lists appearance, such as using \EnumItemOption{itemsep} or \EnumItemOption{parsep} to change the spaces between the items.
+\end{DocsExample}
+
+
+When an element is created, several other macros are created for different needs.
+
+\begin{center}
+    \begin{tabular}{lp{4.3cm}l}
+        \textbf{Macro}                        & \textbf{Description}                                                                  & \textbf{Ex0.1}                          \\
+        \hline
+        \Macro{\Argument{element name}}       & Formats to element style.                                                             & \latexinline{\MyElement{a4paper}}       \\
+        \Macro{\Argument{element name}Def}    & Formats to element style, sets a label and index the element. & \latexinline{\MyElementDef{left}} \\
+        \Macro{\Argument{element name}Ref}    & Formats to element style and hyperlinks to the definition. & \latexinline{\MyElementRef{no align}} \\
+        \Macro{\Argument{element name}Ind}    & Formats to element style and index the element.  & \latexinline{\MyElementInd{showframe}} \\
+        \Macro{\Argument{element name}RefInd} & Formats to element style, hyperlinks to the definition and add an entry to the index. & \latexinline{\MyElementRefInd{a4paper}} \\
+        \Macro{\Argument{element name}Index}  & Index the element without any typeset.                                                & \latexinline{\MyElementIndex{element}}  \\
+    \end{tabular}
+\end{center}
 
 \begin{Macro*}{\Argument{element name}}{\OArg{options}\MArg{item}}{}
     A macro named after \Argument{element name} is created to typeset \Argument{item} in a consistent way. The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
@@ -194,7 +197,7 @@ To instance an element, the \MacroRef{DocsNewElement} macro must be used.
 
 An element can be defined, as previously stated, by calling \Macro{\Argument{element name}Def}. This is handy for inline definitions. An alternative way to define an element is to use an environment also created by \MacroRef{DocsNewElement}. This environment is named \Environment{\Argument{element name}def}.
 
-\begin{Environmentenv}{\Argument{element name}def}{\OArg{options}\MArg{item}\MArg{arguments}\MArg{complement}}{\Argument{element description}}
+\begin{Environmentenv*}{\Argument{element name}def}{\OArg{options}\MArg{item}\MArg{arguments}\MArg{complement}}{\Argument{element description}}
     \label{environmentdef}
     This environment uses \Argument{element name}'s styles to define an instance named \Argument{item}, along with its \Argument{arguments} and a \Argument{complement}. The \Argument{complement} is any additional text.
 
@@ -205,12 +208,12 @@ An element can be defined, as previously stated, by calling \Macro{\Argument{ele
     The values for \Argument {args prefix} and \Argument {complement prefix} are set by \OptionRef{arguments prefix} and \OptionRef{complement prefix} options respectively.
 
     This environment will create an anchor to \Argument {item} and add it to the index.
-\end{Environmentenv}
+\end{Environmentenv*}
 
 
 \begin{DocsExample}
     % args prefix is \texttt{~=~} and complement prefix is \hfill
-    \begin{EnumItemOptiondef}{float}{\texttt{true} | \texttt{false}}{Default: \texttt{true}; initially: \texttt{false}}
+    \begin{EnumItemOptiondef}{float}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}; initially: \DocsInline{false}}
         By adding \EnumItemOption{float} to a list, it will be inserted in a float environment.
     \end{EnumItemOptiondef}
     % This definition can be linked with \<element>Def and item is indexed
@@ -218,12 +221,12 @@ An element can be defined, as previously stated, by calling \Macro{\Argument{ele
 
 Another environment is available to just typeset an item, without creating an anchor and not adding entries to the index.
 
-\begin{Environmentenv}{\Argument{element name}*}{\OArg{options}\MArg{item}\MArg{arguments}\MArg{complement}}{\Argument{element description}}
+\begin{Environmentenv*}{\Argument{element name}*}{\OArg{options}\MArg{item}\MArg{arguments}\MArg{complement}}{\Argument{element description}}
     The \Environment{\Argument{element name}env*} environment has the same behavior as \Environment{\Argument{element name}env}, but no anchor is created and no entry is added to the index.
-\end{Environmentenv}
+\end{Environmentenv*}
 
 \begin{DocsExample}
-    \begin{EnumItemOption*}{float}{\texttt{true} | \texttt{false}}{Default: \texttt{true}; initially: \texttt{false}}
+    \begin{EnumItemOption*}{float}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}; initially: \DocsInline{false}}
         By adding \EnumItemOption{float} to a list, it will be inserted in a float environment.
     \end{EnumItemOption*}
 \end{DocsExample}
@@ -247,7 +250,7 @@ Several options can be used to customize each element. These options are typical
     Sets how \MacroRef{PackageName} will typeset classes and package names.
 \end{Optiondef}
 
-\begin{Optiondef}{argument color}{\Argument {color}}{Inititally: \texttt{orange!50!black}}
+\begin{Optiondef}{argument color}{\Argument {color}}{Inititally: \DocsInline{orange!50!black}}
     Sets the color to typeset arguments (see \MacroRef{Argument}).
 \end{Optiondef}
 
@@ -256,7 +259,7 @@ Several options can be used to customize each element. These options are typical
 \end{Optiondef}
 
 \begin{Optiondef}{arguments prefix}{\Argument{text}}{Initially empty}
-    This options sets the text to be put between the item name and its arguments. For macros, for example, it must be empty; for options it can be set to \texttt{=}.
+    This options sets the text to be put between the item name and its arguments. For macros, for example, it must be empty; for options it can be set to \DocsInline{=}.
 
     This element is only typeset if the \Argument{arguments} are not empty (meaning anything with width equal to zero).
 \end{Optiondef}
@@ -271,7 +274,7 @@ Several options can be used to customize each element. These options are typical
     These \Argument {commands} are prepended to every \Argument {item}.
 \end{Optiondef}
 
-\begin{Optiondef}{color}{\Argument{color}}{Initially: \texttt{.!75}}
+\begin{Optiondef}{color}{\Argument{color}}{Initially: \DocsInline{.!75}}
     This sets the color to be used with the \Argument {item}.
 \end{Optiondef}
 
@@ -283,7 +286,7 @@ Several options can be used to customize each element. These options are typical
     This option is element-specific and will not work as a global option.
 \end{Optiondef}
 
-\begin{Optiondef}{no group index}{\texttt{true} | \texttt{false}}{Default: \texttt{true}; initially \texttt{true}}
+\begin{Optiondef}{no group index}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}; initially \DocsInline{true}}
     This option suppresses adding entries as groups to the index. Single entries are not affected.
 \end{Optiondef}
 
@@ -295,14 +298,14 @@ Several options can be used to customize each element. These options are typical
     This option is element-specific and will not work as a global option.
 \end{Optiondef}
 
-\begin{Optiondef}{no single index}{\texttt{true} | \texttt{false}}{Default: \texttt{true}; initially \texttt{true}}
+\begin{Optiondef}{no single index}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}; initially \DocsInline{true}}
     This option suppresses adding single entries to the index. Group entries are not affected.
 \end{Optiondef}
 
 \subsection{Preset elements}\label{sec:preset-elements}
 
 
-\begin{Optiondef}{presets}{\texttt{true} | \texttt{false}}{Default: \texttt{false}; initially: \texttt{false}}
+\begin{Optiondef}{presets}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}; initially: \DocsInline{false}}
     When \PackageName{docs} is loaded with the \OptionRef{presets} option, some useful elements are automatically created.
 
     \bigskip
@@ -325,79 +328,227 @@ Several options can be used to customize each element. These options are typical
     For example, \OptionRef{presets} is a package option. The \MacroRef{DocsNewElement} macro is used to create new elements and \Environment{tabular} is a well known environment.
 \end{DocsExample}
 
+\subsection{Supplementary resources}
+
+Code examples can be displayed with \EnvironmentRef{DocsListing}, while examples along with their corresponding results can be shown using \EnvironmentRef{DocsExample}.
+
+\begin{Environmentenv}{DocsListing}{}{\Argument{code}}
+    This environment is used to display \LaTeX\ code.
+\end{Environmentenv}
+
+\begin{tcblisting}{example}
+    This is an example code:
+
+    \begin{DocsListing}
+        \usepackage{docs}
+    \end{DocsListing}
+\end{tcblisting}
+
+\begin{Environmentenv}{DocsExample}{}{\Argument{code}}
+    This environment is used to present \LaTeX\ code along with its output.
+\end{Environmentenv}
+
+\begin{tcblisting}{example}
+    This is an example of use:
+
+    \begin{DocsExample}
+        Resources are macros, such as \Macro{Option}, and environments, such as \Environment{DocsExample}.
+    \end{DocsExample}
+\end{tcblisting}
+
+Inline code can use \Macro{DocsInline}.
+
+\begin{Macrodef}{DocsInline}{\MArg{code}}{}
+    %! parser = off
+    This macro is used to display \LaTeX\ code. If braces are balanced, the use \DocsInline{\DocsInline{{example}}} (\DocsInline{{example}}) holds; when unbalanced, \DocsInline$\DocsInline!{example!$ (\DocsInline!{example!) can be used. The use is equivalent to \Macro{verb}.
+    %! parser = on
+\end{Macrodef}
+
+\begin{DocsExample}
+    Someone can use \DocsInline{\usepackage[presets]{docs}} instead of just \DocsInline{\usepackage{docs}}.
+\end{DocsExample}
+
 
 \section{Change history support}
 
-\begin{latexcode}
-    \DocsNewVersion{Ex0.1}{2022}
-    \DocsNewVersion{Ex0.1a}{2023}
-    \DocsNewVersion{Ex0.2}{2024}
-\end{latexcode}
-\DocsNewVersion{Ex0.1}{2022}
-\DocsNewVersion{Ex0.1a}{2023}
-\DocsNewVersion{Ex0.2}{2024}
+This package provides a straightforward yet flexible set of tools for tracking and managing changes across different versions. Each version is uniquely identified by its version number and has its release date.
 
-\begin{DocsExample}
-    \DocsAddChange{Ex0.1}{
-        description = {Initial \textbf{DocsExample} version.},
-        no page,  % no page number
-        no box,  % no box in margin
-    }%
-    The version \textbf{Ex} is just an example, released as \textbf{Ex0.1}. Some importante fixes lead to \textbf{Ex0.1a} and new features were added in \textbf{Ex0.2}.
-\end{DocsExample}
+A sample document, \FileName{docs-change-history-example}, is included with this package to demonstrate the use of versions and change markings.
 
-\begin{DocsExample}
-    \DocsAddChange{Ex0.1a}{
-        description = {\Macro{ExLang} added to support new languages \textbf{DocsExample}.},
-    }%
-    The \Macro{ExLang} macro is used to allow keywords translation.
-\end{DocsExample}
 
-\begin{DocsExample}
-    \DocsAddChange{Ex0.1a}{
-        description = {\Macro{ExSet} fixed to handle spaces \textbf{DocsExample}.},
+\subsection{Creating versions and changes}
+
+Creating versions and changes is straightforward. A version is created with \MacroRef{DocsNewVersion}, and each individual change is logged using \MacroRef{DocsAddChange}. The change history is then produced with \MacroRef{DocsPrintChanges}.
+
+\begin{Macrodef}{DocsNewVersion}{\MArg{version number}\MArg{version date}}{}
+    The \Macro{DocsNewVersion} macro creates a new version entry in the change log. The first required parameter, \Argument{version number}, is used to reference and group the changes made in that version. The version number can follow standard formats, such as \texttt{1.0} or \texttt{2.5.1}, for instance. For the \Argument{version date}, a date in the \textit{YYYY-MM-DD} format is typically used. This date is purely for display in the log, so the specific text format is flexible.
+\end{Macrodef}
+
+\begin{DocsListing}
+    \DocsNewVersion{1.0}{2025-01-01}
+\end{DocsListing}
+
+\begin{Macrodef}{DocsAddChange}{\MArg{version number}\MArg{description}\OArg{box options}}{}
+    The mandatory parameters for \Macro{DocsAddChange} include the \Argument{version number}, which must have been previously defined using \MacroRef{DocsNewVersion}, and a comma-separated \Argument{description} list that outlines the specifics of the change.
+
+    The primary component of the \Argument{description} is, of course, \OptionRef{description}. In addition to this, several other options are available, which are outlined in \Cref{sec:change-options}.
+
+    The change boxes utilize the \PackageName{snaptodo} package, meaning that the final optional parameter, \Argument{box options}, can be used to adjust the appearance or modify other properties of the box.
+\end{Macrodef}
+
+\begin{DocsListing}
+    \DocsAddChange{1.0}{
         updated,
-    }%
-    Use \Macro{ExSet} to set global options.
-\end{DocsExample}
+        description = {\Macro{SomeMacro} now allows floating point calculations.},
+    }
+\end{DocsListing}
 
-\begin{DocsExample}
-    \DocsAddChange{Ex0.1a}{
-        description = {\Macro{ExOld} is deprecated \textbf{DocsExample}.},
-        deprecated,
-    }%
-    Use \Macro{ExOld} will no longer be updated. Don't use it anymore.
-\end{DocsExample}
+The change log is generated using the \MacroRef{DocsPrintChanges} macro, which functions similarly to other macros, such as \Macro{printindex}.
 
-\begin{DocsExample}
-    \DocsAddChange{Ex0.2}{
-        description = {\Macro{ExReallyOld} is no longer present in the package \textbf{DocsExample}.},
-        removed,
-    }%
-    \Macro{ExReallyOld} was removed. This will break older documents.
-\end{DocsExample}
+\begin{Macrodef}{DocsPrintChanges}{\OArg{options}}{}
+    \Macro{DocsPrintChanges} generates the change log using a fixed, predefined format. Its position within the document is not important and can be determined based on the author's preference.
 
-\begin{DocsExample}
-    \DocsAddChange{Ex0.1a}[\Option{invisible}]{
-        description = {New option: \Option{invisible} \textbf{DocsExample}.},
-        new,  % optional
-    }%
-    Package options are \Option{framed}, \Option{nolinks} and \Option{invisible}.
-\end{DocsExample}
+    The \Argument{options} allow for customization of the \OptionRef{version prefix}, the \OptionRef{header style}, and the \OptionRef{entry style}. (See \Cref{sec:options-change-history}.)
+\end{Macrodef}
 
-\begin{DocsExample}
-    \DocsAddChange{Ex0.1a}[\Option{framed}]{
-        updated,
-        no listing,  % this won't appear in the change history
-    }%
-    Package options are \Option{framed}, \Option{nolinks} and \Option{invisible}.
+\begin{DocsListing}
+    \DocsPrintChanges[version prefix = {V}]
+\end{DocsListing}
 
-    \DocsAddChange{Ex0.2}{
-        description = {The code for handling CSV lists was completely rewritten \textbf{DocsExample}.},
-        no box,  % no box in the margin, but description goes the change history
-    }%
-    All elements in this package use comma-separated lists.
-\end{DocsExample}
+\subsection{Options for the Change History}\label{sec:options-change-history}
+
+This section outlines the options available for the change history. These are categorized into general options, which apply to the entire document, and specific options for the change record, which are limited to the particular change being marked.
+
+\subsubsection{General options}
+
+The following are the general options. All of them are defined using \MacroRef{DocsSet} and can be set either in the preamble or within the body of the text. They can also be used locally as options for \MacroRef{DocsPrintChanges} and \MacroRef{DocsAddChange}.
+
+\begin{Optiondef}{version prefix}{\Argument{text}}{Initially empty}
+    The \Option{version prefix} option sets a \Argument{text} that is added before the version number, appearing both in the change listing and in the margin boxes.
+\end{Optiondef}
+
+\begin{Optiondef}{header style}{\Argument{format}}{Initially: \Macro{bfseries}\Macro{footnotesize}}
+    This option defines the formatting commands for the style to be applied to each header line in the change history.
+\end{Optiondef}
+
+\begin{Optiondef}{entry style}{\Argument{format}}{Initially: \Macro{footnotesize}\Macro{RaggedRight}}
+    This option defines the formatting commands for the style to be applied to each change in the change history.
+\end{Optiondef}
+
+\subsubsection{Change options}\label{sec:change-options}
+
+The options specific to changes are used to define each individual change and therefore have a local effect. However, some can be applied globally with \MacroRef{DocsSet}, as noted in their description.
+
+\begin{Optiondef}{description}{\Argument{text}}{}
+    The description of a change refers to the \Argument{text} that will be included in the change history.
+
+    The \Option{description} key can be omitted when the \OptionRef{no listing} option is applied.
+\end{Optiondef}
+
+\begin{Optiondef}{type}{\Argument{type}}{}
+    \Argument{type} defines the type of change. Its value can be one of the following: \DocsInline{new}, \DocsInline{update}, \DocsInline{change}, \DocsInline{removal}, or \DocsInline{deprecation}. In practice, the key \Option{type} is optional and one can specify directly the values of \Argument{type}.
+
+    If no type is specified, the change defaults to \DocsInline{new}.
+\end{Optiondef}
+
+\begin{DocsListing}
+    % The three change markers are equivalent.
+    \DocsAddChange{1.0}{
+        description = {A new feature has been implemented.},
+    }
+    \DocsAddChange{1.0}{
+        new,
+        description = {A new feature has been implemented.},
+    }
+    \DocsAddChange{1.0}{
+        type = new,
+        description = {A new feature has been implemented.},
+    }
+\end{DocsListing}
+
+\begin{Optiondef}{title}{\Argument{text}}{}
+    Using \Option{title}, a \Argument{text} can be added to the box to provide additional relevant information.
+\end{Optiondef}
+
+\begin{DocsListing}
+    \DocsAddChange{1.0}{
+        update,
+        title = {Paragraphs},
+        description = {A modification has been implemented regarding paragraphs.},
+    }
+\end{DocsListing}
+
+
+\begin{Optiondef}{no page}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}}
+    The \Option{no page} option is used to omit the page from the change log listing.
+
+    This option can be set globally with \MacroRef{DocsSet}.
+\end{Optiondef}
+
+\begin{DocsListing}
+    \DocsAddChange{1.0}{
+        deprecation,
+        description = {\Macro{OldThing} is no longer supported.},
+        no page,
+    }
+\end{DocsListing}
+
+
+\begin{Optiondef}{no listing}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}}
+    The \Option{no listing} option prevents the change from being added to the change log.
+
+    This option can be set globally with \MacroRef{DocsSet}.
+\end{Optiondef}
+
+\begin{DocsListing}
+    \DocsAddChange{1.0}{
+        deprecation,
+        description = {\Macro{OldThing} is no longer supported.},
+        no listing,
+    }
+\end{DocsListing}
+
+\begin{Optiondef}{no box}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}}
+    The \Option{no box} option prevents the change box from being displayed in the left margin.
+
+    This option can be set globally with \MacroRef{DocsSet}.
+\end{Optiondef}
+
+\begin{Optiondef}{page}{\Argument{text}}{}
+    By default, the page number where a change was recorded is included in the change log. This can be modified using the \Option{page} option, which allows for an alternative \Argument{text}.
+
+    In a special case, an empty \Argument{text} is equivalent to \OptionRef{no page}.
+\end{Optiondef}
+
+\begin{DocsListing}
+    \DocsAddChange{1.0}{
+        update,
+        description = {A substantial amount of changes have been made.},
+        page = {Chapt.~5.},
+    }
+\end{DocsListing}
+
+
+\section{\Macro{DocsSet}}
+
+Certain options, both general and specific to the changes, can be defined globally using \MacroRef{DocsSet}.
+
+\begin{Macrodef}{DocsSet}{\MArg{options}}{}
+    This macro enables certain settings for the change history and the changes themselves to be applied globally across the entire text, starting with the use of \Macro{DocsSet}.
+\end{Macrodef}
+
+\begin{DocsListing}
+    \DocsSet{
+        version prefix = {V},  % 0.1 is displayed V0.1
+        argument color = blue,  % color for <argument>
+        no page,  % all pages are suppressed from the Change History
+    }
+\end{DocsListing}
+
+
+\section{Issues}
+
+As this is the initial version, it is premature to provide a list of known issues. Therefore, any problems or suggestions may be submitted directly to me via email or by opening an issue on \FileName{github} (\url{https://github.com/jandermoreira/docs}).
 
 \printindex
 

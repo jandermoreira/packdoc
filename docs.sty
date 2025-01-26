@@ -47,28 +47,28 @@
 \makeindex
 
 \RequirePackage{minted}
-\newminted{latex}{autogobble, breaklines, bgcolor = blue!5, fontsize = \footnotesize}
-\newmintinline{latex}{}
 
 \RequirePackage{tcolorbox}
 \tcbuselibrary{most, minted}
 
 \newbool{docs@InExample}
+\newlength{\docs@ColorBoxIndent}
+\setlength{\docs@ColorBoxIndent}{3em}
 \tcbset{
     description/.style = {
         coltitle = black,
         fontupper = \normalsize,
-        colbacktitle = black!10,
+        colbacktitle = black,
         titlerule = 0.001pt,
         enhanced jigsaw,
         breakable,
-        width = \dimexpr \linewidth - 2em \relax,
+        sharp corners,
         flush right,
         top = 0.5ex,
         bottom = 0pt,
-        left = 0pt,
+        left = \docs@ColorBoxIndent,
         right = 0pt,
-        opacitybacktitle = 0,
+        opacitybacktitle = 0.05,
         opacityframe = 0,
         opacityback = 0,
     },
@@ -92,7 +92,10 @@
         after lower = {\boolfalse{docs@InExample}},
     }
 }
+\newtcblisting{DocsListing}{listing options = {language = latex}, example, listing only}
 \newtcblisting{DocsExample}{example}
+\newmintinline{latex}{}
+\cslet{DocsInline}{\latexinline}
 
 \RequirePackage{cleveref}
 
@@ -130,6 +133,10 @@
     \DocsSet{#1}%
     \mbox{\docs@PackageStyle#2}%
     \endgroup%
+}
+
+\NewDocumentCommand{\FileName}{ m }{%
+    \mbox{\textsf{#1}}%
 }
 
 % Arguments
@@ -290,10 +297,15 @@
             }{
             \end{elementdef}
         }
-        \NewDocumentEnvironment{#1env}{ m m }{
-            \begin{elementenv*}{#1}{##1}{##2}
+        \NewDocumentEnvironment{#1env*}{ m m m }{
+            \begin{elementenv*}{#1}{##1}{##2}{##3}
             }{
             \end{elementenv*}
+        }
+        \NewDocumentEnvironment{#1env}{ m m m }{
+            \begin{elementenv}{#1}{##1}{##2}{##3}
+            }{
+            \end{elementenv}
         }
     }
 }
@@ -355,12 +367,13 @@
 % #4: Value
 \NewDocumentEnvironment{element*}{ m m m m }{%
     \begin{tcolorbox}[
+        description,
         title = {%
-        \hspace{-2em}\DocsElement{#1}{#2}%
+        \hspace{-\docs@ColorBoxIndent}%
+        \DocsElement{#1}{#2}%
         \docs@IfHasLength{#3}{\csuse{docs@#1@ArgumentsPrefix}#3}{}%
         \docs@IfHasLength{#4}{\csuse{docs@#1@ComplementPrefix}#4}{}%
         },
-        description,
     ]%
     }{%
     \end{tcolorbox}%
@@ -388,9 +401,10 @@
         [
         title = {%
             %! parser=off
-            \hspace{-2em}\latexinline!\begin!\texttt{\{}\csuse{#1}{#2}\texttt{\}}#3\par
+            \hspace{-\docs@ColorBoxIndent}\latexinline!\begin!\texttt{\{}\csuse{#1}{#2}\texttt{\}}#3\par
+            \hspace{-0.5\docs@ColorBoxIndent}%
             \docs@IfHasLength{#4}{#4}{\Argument{environment contents}}\par
-            \hspace{-2em}\latexinline!\end!\texttt{\{}\csuse{#1}{#2}\texttt{\}}%
+            \hspace{-\docs@ColorBoxIndent}\latexinline!\end!\texttt{\{}\csuse{#1}{#2}\texttt{\}}%
             %! parser=on
         },
         description,
@@ -400,9 +414,11 @@
     \medskip%
 }
 
-\NewDocumentEnvironment{elementenv}{ m m m }{%
-    \begin{elementenv*}{#1}{#2}{#3}
-    }{%
+\NewDocumentEnvironment{elementenv}{ m m m m }{%
+    \begin{elementenv*}{#1}{#2}{#3}{#4}
+        \DocsIndexElement{#1}{#2}%
+        \label{#1:#2}
+        }{%
     \end{elementenv*}
 }
 
@@ -571,6 +587,7 @@
 \pgfkeys{
     /docs/.cd,
     version/.code = {\docs@SetChangeAttribute{version}{#1}},
+    title/.code = {\csdef{docs@BoxTitle}{#1}},
     description/.code = {\docs@SetChangeAttribute{description}{#1}},
     page/.code = {\docs@SetChangeAttributeExpanded{page}{#1}},
     no page/.style = {page = {}},
@@ -578,11 +595,14 @@
     no listing/.is if = docs@NoListing,
     type/.is choice,
     type/new/.code = {\docs@SetChangeAttribute{type}{New in}},
-    type/updated/.code = {\docs@SetChangeAttribute{type}{Updated in}},
-    type/changed/.code = {\docs@SetChangeAttribute{type}{Changed in}},
-    type/removed/.code = {\docs@SetChangeAttribute{type}{Removed in}},
-    type/deprecated/.code = {\docs@SetChangeAttribute{type}{Deprecated in}},
-    .unknown/.code = {\pgfkeysalso{type = \pgfkeyscurrentname}},
+    type/update/.code = {\docs@SetChangeAttribute{type}{Updated in}},
+    type/change/.code = {\docs@SetChangeAttribute{type}{Changed in}},
+    type/removal/.code = {\docs@SetChangeAttribute{type}{Removed in}},
+    type/deprecation/.code = {\docs@SetChangeAttribute{type}{Deprecated in}},
+    .unknown/.code = {%
+        \csedef{docs@local@Option}{type = \pgfkeyscurrentname}%
+        \pgfkeysalsofrom{\docs@local@Option}%
+    },
 }
 
 \DocsSet{
@@ -602,10 +622,7 @@
 
 
 % DocsAddChange: records a new change
-% #2: comma-separated list with change description
-%\newbool
-%\AtBeginEnvironment{tcblisting}{}
-\NewDocumentCommand{\DocsAddChange}{ m o > { \TrimSpaces } m O{} }{%
+\NewDocumentCommand{\DocsAddChange}{ m > { \TrimSpaces } m O{} }{%
     \docs@IfVersionExists{#1}{%
         \begingroup%
         \pgfkeys{
@@ -613,8 +630,12 @@
             page = \thepage,
             version = #1,
             type = new,
-            description = \textbf{???},
-            #3,
+            title = {},
+            description = {%
+                \textbf{???}%
+                \PackageWarning{docs}{A change without a description and without the 'no listing' option has been created.}%
+            },
+            #2,
         }%
         \hspace{0pt}%
         \docs@AddChangeToVersion%
@@ -623,20 +644,22 @@
         \docs@GetChangeInfo{\docs@CurrentChangeCounter}{label}[\docs@InfoResult]%
         \expandafter\label\expandafter{\docs@InfoResult:change}%
         \ifbool{docs@HideBox}{}{%
-            %\reversemarginpar%
-            %\ifbool{docs@InExample}{\let\marginpar\marginnote}{}%
-            %\tikzset{
-            %    notestyleraw/.append style = {rounded corners = 0pt, inner sep = 2pt},
-            %}%
+        %\reversemarginpar%
+        %\ifbool{docs@InExample}{\let\marginpar\marginnote}{}%
+        %\tikzset{
+        %    notestyleraw/.append style = {rounded corners = 0pt, inner sep = 2pt},
+        %}%
             \snaptodo[
                 block sep = -0.2ex,
                 call chain/.style = {draw = none},
-                margin block/.style = {font = \tiny, blue!75!black},
+                margin block/.style = {font = \scriptsize, blue!75!black},
                 chain bias = -99in,  % force to left margin
-                #4
+                #3
             ]{%
-                \IfValueT{#2}{\textbf{#2}:\\}{}%
-                \scshape%
+                \docs@IfHasLength{\csuse{docs@BoxTitle}}{%
+                    \textbf{\csuse{docs@BoxTitle}}:\\%
+                }{}%
+                \sffamily%
                 \docs@GetChangeInfo{\docs@CurrentChangeCounter}{type}
                 \docs@VersionPrefix\docs@GetChangeInfo{\docs@CurrentChangeCounter}{version}%
             }%
@@ -789,15 +812,18 @@
 \setlength{\docs@PageNumberWidth}{1cm}
 \NewDocumentCommand{\DocsPrintChange}{ s m m m }{%
     \IfBooleanF{#1}{%
+        \begingroup%
         \hspace{0.25cm}%
         \parbox[b]{\dimexpr \linewidth - \docs@PageNumberWidth - 0.25cm}{%
             \setlength{\hangindent}{0.7cm}#2%
             \ifstrempty{#3}{}{\dotfill}%
         }%
         \ifstrempty{#3}{}{%
+            \hangindent=0.6\linewidth%
             \hspace{-0.05cm}\dotfill~\hspace{0.05cm}\hyperref[#4:change]{#3}%
         }%
         \par\vspace{0.5em}
+        \endgroup%
     }
 }
 
