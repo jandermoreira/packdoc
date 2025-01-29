@@ -1,36 +1,36 @@
 %! Author = Jander Moreira
 %! Date = 2024
 
-\documentclass[11pt, outdir = ./out]{article}
+\documentclass[11pt]{article}
 \usepackage[T1]{fontenc}
 
-\usepackage[presets]{docs}
+\usepackage[presets]{packdoc}
 
-\title{The \PackageName{docs} package\\\normalsize\textsf{\DocsVersion}}
+\title{The \PackageName{packdoc} package\\\normalsize\textsf{\PDVersion}}
 \author{%
     Jander Moreira\\%
     \texttt{moreira.jander@gmail.com}\\%
-    \url{https://github.com/jandermoreira/docs}%
+    \url{https://github.com/jandermoreira/packdoc}%
 }
-\date{\DocsDate}
+\date{\PDDate}
 
 \begin{document}
 
 \maketitle
 \tableofcontents
 
-\DocsNewVersion{0.1}{2024/12/04}
-\DocsAddChange {0.1}{
+\PDNewVersion{0.1}{2024/12/04}
+\PDAddChange {0.1}{
     description = {Initial version.},
     no box,
     no page,
 }
-\DocsPrintChanges
+\PDPrintChanges
 
 
 \section{Introduction}
 
-The \PackageName{docs} package was developed to assist in the writing of documents or manuals that use \LaTeX. The intention is to simplify the documentation process by providing standardized formatting for key components. This includes the ability to describe the syntax and functionality of macros and environments, as well as available options and their usage. Additionally, the package facilitates the inclusion of elements such as index entries, ensuring a clear and consistent structure throughout the text.
+The \PackageName{packdoc} package was developed to assist in the writing of documents or manuals that use \LaTeX. The intention is to simplify the documentation process by providing standardized formatting for key components. This includes the ability to describe the syntax and functionality of macros and environments, as well as available options and their usage. Additionally, the package facilitates the inclusion of elements such as index entries, ensuring a clear and consistent structure throughout the text.
 
 This package is not intended to replace or compete with the use of \FileName{.dtx} and \FileName{.ins} files, which is an important strategy for writing \FileName{.sty} files. The development of a package and its documentation should be done independently. A very personal reason for this approach is that my background is in Computer Science, and, as such, I have a strong inclination towards writing well-formatted and well-documented code. Therefore, in the end, while the style file created from \FileName{.dtx} and .ins files is functional, it often lacks attention to the elegance in the look of the code. For this reason, I write \FileName{.sty} files and their documentation completely separately.
 
@@ -39,12 +39,12 @@ This package offers the capability to document commands and environments, in add
 \section{Package usage and options}
 To use this package, it must be loaded with \Macro{usepackage}.
 
-\begin{Macro*}{usepackage}{\OArg{options}\PArg{docs}}{}
+\begin{Macro*}{usepackage}{\OArg{options}\PArg{packdoc}}{}
     So far there is only one option to the package: \OptionRef{presets}. This is covered in \Cref{sec:preset-elements}.
 \end{Macro*}
 
 
-\section {Documentation}
+\section{Documentation}
 
 \subsection{Basic commands}
 
@@ -54,9 +54,9 @@ A set of useful macros is provided to facilitate the creation of consistent docu
     This macro is designed to format \Argument {name} as the name of \LaTeX packages and classes, such as \PackageName{amsmath} or \PackageName{article}. The optional argument \Argument{options} allows for local adjustments to the style used for package names by modifying the \OptionRef{package style}.
 \end{Macrodef}
 
-\begin{DocsExample}
+\begin{PDExample}
     Examples of useful packages include \PackageName{graphicx} and \PackageName{xcolor}. Additionally, \PackageName[package style=\scshape\color{blue}]{babel} and \PackageName{inputenc} are also important.
-\end{DocsExample}
+\end{PDExample}
 
 \begin{Macrodef}{Argument}{\OArg{options}\MArg{name}}{}
     The \Macro{Argument} macro is used to format generic arguments.
@@ -64,9 +64,9 @@ A set of useful macros is provided to facilitate the creation of consistent docu
     The optional \OptionRef{argument color} allows the color of the argument to be customized. However, the font, size, and shape of arguments are currently hardcoded and cannot be adjusted.
 \end{Macrodef}
 
-\begin{DocsExample}
+\begin{PDExample}
     The \PackageName{article} class supports \Argument{options}, including settings like paper size and the number of columns.
-\end{DocsExample}
+\end{PDExample}
 
 \begin{Macrodef}{MArg}{\OArg{options}\MArg{name}}{}
     ``MArg'' means \textit{mandatory argument}, and the result is the same as \MacroRef{Argument} enclosed in braces. The same \Argument{options} available for \MacroRef{Argument} also apply.
@@ -76,36 +76,36 @@ A set of useful macros is provided to facilitate the creation of consistent docu
     ``OArg'' stands for \textit{optional argument}, and the result is the same as \MacroRef{Argument} enclosed in square brackets. The same \Argument{options} available for \MacroRef{Argument} also apply.
 \end{Macrodef}
 
-\begin{DocsExample}
+\begin{PDExample}
     Mandatory argument: \MArg{arg}.\par
     Optional argument: \OArg{arg}.
-\end{DocsExample}
+\end{PDExample}
 
-Additionally, macros for arguments between angle brackets (e.g., \texttt{<\Option{color} = blue>}) and plain text (e.g., \DocsInline{{newcounter}}) are also available.
+Additionally, macros for arguments between angle brackets (e.g., \texttt{<\Option{color} = blue>}) and plain text (e.g., \PDInline{{newcounter}}) are also available.
 
 \begin{Macrodef}{AArg}{\OArg{options}\MArg{name}}{}
     ``AArg'' stands for \textit{optional argument between angular brackets}. The same \Argument{options} for \MacroRef{Argument} also apply.
 \end{Macrodef}
 
-\begin{DocsExample}
-    Class \PackageName{beamer} can use overlays in slides. For example, \AArg[argument color = red]{range} can be used in a itemized list and \Argument{range} can be set to \DocsInline{2} (only on slide 2) or \DocsInline{2-5} (from slide 2 to 5), for example.
-\end{DocsExample}
+\begin{PDExample}
+    Class \PackageName{beamer} can use overlays in slides. For example, \AArg[argument color = red]{range} can be used in a itemized list and \Argument{range} can be set to \PDInline{2} (only on slide 2) or \PDInline{2-5} (from slide 2 to 5), for example.
+\end{PDExample}
 
 \begin{Macrodef}{PArg}{\MArg{name}}{}
     ``PArg'' stands for \textit{mandatory plain text argument} and is an \MacroRef{Argument} between brackets without any special format.
 \end{Macrodef}
 
-\begin{DocsExample}
+\begin{PDExample}
     Plain argument: \PArg{article}
-\end{DocsExample}
+\end{PDExample}
 
 \subsection{Elements}
 
 An \textit{element} in the scope of this document refers to an item that can be highlighted and referenced, such as macros, options and environments, for example.
 
-To instance an element, the \MacroRef{DocsNewElement} macro must be used.
+To instance an element, the \MacroRef{PDNewElement} macro must be used.
 
-\DocsNewElement{EnumItemOption}{
+\PDNewElement{EnumItemOption}{
     color = red!75!black,
     arguments prefix = \texttt{~=~},
     index heading = \texttt{EnumItemOption} example,
@@ -113,17 +113,17 @@ To instance an element, the \MacroRef{DocsNewElement} macro must be used.
     no single index,
     no group index,
 }
-\begin{Macrodef}{DocsNewElement}{\MArg{element name}\MArg{element options}}{}
+\begin{Macrodef}{PDNewElement}{\MArg{element name}\MArg{element options}}{}
     This macro creates a new element named \Argument{element name} and several other macros to use it. The \Argument{element options} are a key/value list of options to change how the item will look like.
 \end{Macrodef}
 
-\begin{DocsListing}
-    \DocsNewElement{EnumItemOption}{color = red!75!black}
-\end{DocsListing}
+\begin{PDListing}
+    \PDNewElement{EnumItemOption}{color = red!75!black}
+\end{PDListing}
 
-\begin{DocsExample}
+\begin{PDExample}
     I like to use the \PackageName{enumitem} package. It makes easier to fine tune the lists appearance, such as using \EnumItemOption{itemsep} or \EnumItemOption{parsep} to change the spaces between the items.
-\end{DocsExample}
+\end{PDExample}
 
 
 When an element is created, several other macros are created for different needs.
@@ -142,60 +142,60 @@ When an element is created, several other macros are created for different needs
 \end{center}
 
 \begin{Macro*}{\Argument{element name}}{\OArg{options}\MArg{item}}{}
-    A macro named after \Argument{element name} is created to typeset \Argument{item} in a consistent way. The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
+    A macro named after \Argument{element name} is created to typeset \Argument{item} in a consistent way. The appearance will follow that defined when \Argument{element name} was created with \Macro{PDNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
 \end{Macro*}
 
-\begin{DocsExample}
+\begin{PDExample}
     I like to use the \PackageName{enumitem} package. It makes easier to fine tune lists, such as using \EnumItemOption{itemsep} or \EnumItemOption{parsep} to change the spaces between them items.
-\end{DocsExample}
+\end{PDExample}
 
 \begin{Macro*}{\Argument{element name}Def}{\OArg{options}\MArg{item}}{}
     A macro \Macro{\Argument{element name}Def} is used to define an \Argument{item}, so it can be cross-referenced and have index entries. The definition can be referenced by the \Macro{\Argument{element name}Ref} macro.
 
-    The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
+    The appearance will follow that defined when \Argument{element name} was created with \Macro{PDNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
 
     The definition of an \Argument {item} can be stated with an environment called \hyperref[environmentdef]{\Environment{\Argument {element name}def}} instead.
 \end{Macro*}
 
-\begin{DocsExample}
+\begin{PDExample}
     I wrote some code to extend the \PackageName{enumitem} package. Now \EnumItemOptionDef{float} can be used to insert a list in a float.
     % The name 'float' has an anchor (label) and entries in the index.
-\end{DocsExample}
+\end{PDExample}
 
 \begin{Macro*}{\Argument{element name}Ref}{\OArg{options}\MArg{text}}{}
     The macro \Macro{\Argument{element name}Ref} typesets the \Argument{item} and creates a link to its definition.
 
-    The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
+    The appearance will follow that defined when \Argument{element name} was created with \Macro{PDNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
 \end{Macro*}
 
-\begin{DocsExample}
+\begin{PDExample}
     Remember that the \EnumItemOptionRef{float} cannot be used if the list is already in a float.
     % 'float' is a link to the definition
-\end{DocsExample}
+\end{PDExample}
 
 \begin{Macro*}{\Argument{element name}Ind}{\OArg{options}\MArg{item}}{}
     The \Macro{\Argument{element name}} macro defines \Argument{item} and inserts entries to the index. Sometimes a secondary index entry is desired, so \Macro{\Argument{element name}Ind} does the job. A reference to the definition is not created.
 
-    The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
+    The appearance will follow that defined when \Argument{element name} was created with \Macro{PDNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
 \end{Macro*}
 
-\begin{DocsExample}
+\begin{PDExample}
     Here we describe some other important information about the  \EnumItemOptionInd{float} option.
     % 'float' has now new index entries, but it's not a link
-\end{DocsExample}
+\end{PDExample}
 
 \begin{Macro*}{\Argument{element name}RefInd}{\OArg{options}\MArg{text}}{}
     The \Macro{\Argument{element name}RefInd} performs the job of both \Macro{\Argument{element name}Ind} and \Macro{\Argument{element name}Ind}, so the index is affected and a reference to the definition is created.
 
-    The appearance will follow that defined when \Argument{element name} was created with \Macro{DocsNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
+    The appearance will follow that defined when \Argument{element name} was created with \Macro{PDNewElement}, but can be overridden with \Argument{options} (see \Cref{sec:options-for-elements}).
 \end{Macro*}
 
-\begin{DocsExample}
+\begin{PDExample}
     Here we describe some other important information about the  \EnumItemOptionRefInd{float} option.
     % 'float' has now new index entries and is also a link
-\end{DocsExample}
+\end{PDExample}
 
-An element can be defined, as previously stated, by calling \Macro{\Argument{element name}Def}. This is handy for inline definitions. An alternative way to define an element is to use an environment also created by \MacroRef{DocsNewElement}. This environment is named \Environment{\Argument{element name}def}.
+An element can be defined, as previously stated, by calling \Macro{\Argument{element name}Def}. This is handy for inline definitions. An alternative way to define an element is to use an environment also created by \MacroRef{PDNewElement}. This environment is named \Environment{\Argument{element name}def}.
 
 \begin{Environmentenv*}{\Argument{element name}def}{\OArg{options}\MArg{item}\MArg{arguments}\MArg{complement}}{\Argument{element description}}
     \label{environmentdef}
@@ -211,13 +211,13 @@ An element can be defined, as previously stated, by calling \Macro{\Argument{ele
 \end{Environmentenv*}
 
 
-\begin{DocsExample}
+\begin{PDExample}
     % args prefix is \texttt{~=~} and complement prefix is \hfill
-    \begin{EnumItemOptiondef}{float}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}; initially: \DocsInline{false}}
+    \begin{EnumItemOptiondef}{float}{\PDInline{true} | \PDInline{false}}{Default: \PDInline{true}; initially: \PDInline{false}}
         By adding \EnumItemOption{float} to a list, it will be inserted in a float environment.
     \end{EnumItemOptiondef}
     % This definition can be linked with \<element>Def and item is indexed
-\end{DocsExample}
+\end{PDExample}
 
 Another environment is available to just typeset an item, without creating an anchor and not adding entries to the index.
 
@@ -225,32 +225,32 @@ Another environment is available to just typeset an item, without creating an an
     The \Environment{\Argument{element name}env*} environment has the same behavior as \Environment{\Argument{element name}env}, but no anchor is created and no entry is added to the index.
 \end{Environmentenv*}
 
-\begin{DocsExample}
-    \begin{EnumItemOption*}{float}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}; initially: \DocsInline{false}}
+\begin{PDExample}
+    \begin{EnumItemOption*}{float}{\PDInline{true} | \PDInline{false}}{Default: \PDInline{true}; initially: \PDInline{false}}
         By adding \EnumItemOption{float} to a list, it will be inserted in a float environment.
     \end{EnumItemOption*}
-\end{DocsExample}
+\end{PDExample}
 
 \subsection{Options for elements}\label{sec:options-for-elements}
 
-Several options can be used to customize each element. These options are typically specified when the element is created with \MacroRef{DocsNewElement}, but can also be modified with \MacroRef{DocsSetElement}. Options not specified at creation assume predefined default values, which can also be changed with \MacroRef{DocSet}.
+Several options can be used to customize each element. These options are typically specified when the element is created with \MacroRef{PDNewElement}, but can also be modified with \MacroRef{PDSetElement}. Options not specified at creation assume predefined default values, which can also be changed with \MacroRef{PDSet}.
 
-\begin{Macrodef}{DocsSetElement}{\MArg{element name}\MArg{option list}}{}
-    After created with \MacroRef{DocsNewElement}, options can be changed \textit{a posteriori} with \Macro{DocsSetElement}
+\begin{Macrodef}{PDSetElement}{\MArg{element name}\MArg{option list}}{}
+    After created with \MacroRef{PDNewElement}, options can be changed \textit{a posteriori} with \Macro{PDSetElement}
 \end{Macrodef}
 
-\begin{DocsExample}
-    \DocsNewElement{MyItem}{color = magenta, no single index, no group index}
-    An example of MyItem is \MyItem{DocsExample}.\par
-    \DocsSetElement{MyItem}{color = blue!80!black, font = \slshape}
+\begin{PDExample}
+    \PDNewElement{MyItem}{color = magenta, no single index, no group index}
+    An example of MyItem is \MyItem{PDExample}.\par
+    \PDSetElement{MyItem}{color = blue!80!black, font = \slshape}
     This is another one: \MyItem{instance}.
-\end{DocsExample}
+\end{PDExample}
 
 \begin{Optiondef}{package style}{\Argument {commands}}{Initially: \Macro{sffamily}}
     Sets how \MacroRef{PackageName} will typeset classes and package names.
 \end{Optiondef}
 
-\begin{Optiondef}{argument color}{\Argument {color}}{Inititally: \DocsInline{orange!50!black}}
+\begin{Optiondef}{argument color}{\Argument {color}}{Inititally: \PDInline{orange!50!black}}
     Sets the color to typeset arguments (see \MacroRef{Argument}).
 \end{Optiondef}
 
@@ -259,7 +259,7 @@ Several options can be used to customize each element. These options are typical
 \end{Optiondef}
 
 \begin{Optiondef}{arguments prefix}{\Argument{text}}{Initially empty}
-    This options sets the text to be put between the item name and its arguments. For macros, for example, it must be empty; for options it can be set to \DocsInline{=}.
+    This options sets the text to be put between the item name and its arguments. For macros, for example, it must be empty; for options it can be set to \PDInline{=}.
 
     This element is only typeset if the \Argument{arguments} are not empty (meaning anything with width equal to zero).
 \end{Optiondef}
@@ -274,7 +274,7 @@ Several options can be used to customize each element. These options are typical
     These \Argument {commands} are prepended to every \Argument {item}.
 \end{Optiondef}
 
-\begin{Optiondef}{color}{\Argument{color}}{Initially: \DocsInline{.!75}}
+\begin{Optiondef}{color}{\Argument{color}}{Initially: \PDInline{.!75}}
     This sets the color to be used with the \Argument {item}.
 \end{Optiondef}
 
@@ -286,11 +286,11 @@ Several options can be used to customize each element. These options are typical
     This option is element-specific and will not work as a global option.
 \end{Optiondef}
 
-\begin{Optiondef}{no group index}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}; initially \DocsInline{true}}
+\begin{Optiondef}{no group index}{\PDInline{true} | \PDInline{false}}{Default: \PDInline{true}; initially \PDInline{true}}
     This option suppresses adding entries as groups to the index. Single entries are not affected.
 \end{Optiondef}
 
-\begin{Optiondef}{index remark}{\Argument {text}}{Default: \texttt{\{\DocsTilde(\Argument{element name})\}}}
+\begin{Optiondef}{index remark}{\Argument {text}}{Default: \texttt{\{\PDTilde(\Argument{element name})\}}}
     Every index entry will be appended with \Argument {text} the item name.
 
     Single entries can be removed with \OptionRef{no single index}.
@@ -298,15 +298,15 @@ Several options can be used to customize each element. These options are typical
     This option is element-specific and will not work as a global option.
 \end{Optiondef}
 
-\begin{Optiondef}{no single index}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}; initially \DocsInline{true}}
+\begin{Optiondef}{no single index}{\PDInline{true} | \PDInline{false}}{Default: \PDInline{true}; initially \PDInline{true}}
     This option suppresses adding single entries to the index. Group entries are not affected.
 \end{Optiondef}
 
 \subsection{Preset elements}\label{sec:preset-elements}
 
 
-\begin{Optiondef}{presets}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}; initially: \DocsInline{false}}
-    When \PackageName{docs} is loaded with the \OptionRef{presets} option, some useful elements are automatically created.
+\begin{Optiondef}{presets}{\PDInline{true} | \PDInline{false}}{Default: \PDInline{true}; initially: \PDInline{false}}
+    When \PackageName{packdoc} is loaded with the \OptionRef{presets} option, some useful elements are automatically created.
 
     \bigskip
     \begin{tabular}{ll}
@@ -322,98 +322,114 @@ Several options can be used to customize each element. These options are typical
 \end{Optiondef}
 
 
-\begin{DocsExample}
+\begin{PDExample}
     The preset elements include \Option{option}, \Macro{macro} and \Environment{environment}.
 
-    For example, \OptionRef{presets} is a package option. The \MacroRef{DocsNewElement} macro is used to create new elements and \Environment{tabular} is a well known environment.
-\end{DocsExample}
+    For example, \OptionRef{presets} is a package option. The \MacroRef{PDNewElement} macro is used to create new elements and \Environment{tabular} is a well known environment.
+\end{PDExample}
 
 \subsection{Supplementary resources}
 
-Code examples can be displayed with \EnvironmentRef{DocsListing}, while examples along with their corresponding results can be shown using \EnvironmentRef{DocsExample}.
+Code examples can be displayed with \EnvironmentRef{PDListing}, while examples along with their corresponding results can be shown using \EnvironmentRef{PDExample}.
 
-\begin{Environmentenv}{DocsListing}{}{\Argument{code}}
+\begin{Environmentenv}{PDListing}{}{\Argument{code}}
     This environment is used to display \LaTeX\ code.
 \end{Environmentenv}
 
 \begin{tcblisting}{example}
     This is an example code:
 
-    \begin{DocsListing}
-        \usepackage{docs}
-    \end{DocsListing}
+    \begin{PDListing}
+        \usepackage{packdoc}
+    \end{PDListing}
 \end{tcblisting}
 
-\begin{Environmentenv}{DocsExample}{}{\Argument{code}}
+\begin{Environmentenv}{PDExample}{}{\Argument{code}}
     This environment is used to present \LaTeX\ code along with its output.
 \end{Environmentenv}
 
 \begin{tcblisting}{example}
     This is an example of use:
 
-    \begin{DocsExample}
-        Resources are macros, such as \Macro{Option}, and environments, such as \Environment{DocsExample}.
-    \end{DocsExample}
+    \begin{PDExample}
+        Resources are macros, such as \Macro{Option}, and environments, such as \Environment{PDExample}.
+    \end{PDExample}
 \end{tcblisting}
 
-Inline code can use \Macro{DocsInline}.
+Inline code can use \Macro{PDInline}.
 
-\begin{Macrodef}{DocsInline}{\MArg{code}}{}
+\begin{Macrodef}{PDInline}{\MArg{code}}{}
     %! parser = off
-    This macro is used to display \LaTeX\ code. If braces are balanced, the use \DocsInline{\DocsInline{{example}}} (\DocsInline{{example}}) holds; when unbalanced, \DocsInline$\DocsInline!{example!$ (\DocsInline!{example!) can be used. The use is equivalent to \Macro{verb}.
+    This macro is used to display \LaTeX\ code. If braces are balanced, the use \PDInline{\PDInline{{example}}} (\PDInline{{example}}) holds; when unbalanced, \PDInline$\PDInline!{example!$ (\PDInline!{example!) can be used. The use is equivalent to \Macro{verb}.
     %! parser = on
 \end{Macrodef}
 
-\begin{DocsExample}
-    Someone can use \DocsInline{\usepackage[presets]{docs}} instead of just \DocsInline{\usepackage{docs}}.
-\end{DocsExample}
+\begin{PDExample}
+    Someone can use \PDInline{\usepackage[presets]{packdoc}} instead of just \PDInline{\usepackage{packdoc}}.
+\end{PDExample}
+
+\begin{Macrodef}{PDTilde}{}{}
+    The \Macro{PDTilde} generates a more visually appealing and accurately positioned single tilde (\PDTilde) for representing a non-breaking space.
+
+    In context, some tildes can be compared:
+
+    \begin{tabular}{ccc}
+        \textbf{Code} & Result & Result (monotype) \\
+        \hline
+        ab\Macro{PDTilde} cd & ab\PDTilde cd & \texttt{ab\PDTilde cd} \\
+        ab\PDInline{\~{}cd} & ab\~{}cd & \texttt{ab\~{}cd} \\
+        ab\PDInline{\texttildelow}cd (\PackageName{textcomp}) & ab\texttildelow cd & \texttt{ab\texttildelow cd} \\
+        ab\PDInline{\textasciitilde}cd & ab\textasciitilde cd & \texttt{ab\textasciitilde cd} \\
+    \end{tabular}
+
+\end{Macrodef}
 
 
 \section{Change history support}
 
 This package provides a straightforward yet flexible set of tools for tracking and managing changes across different versions. Each version is uniquely identified by its version number and has its release date.
 
-A sample document, \FileName{docs-change-history-example}, is included with this package to demonstrate the use of versions and change markings.
+A sample document, \FileName{packdoc-change-history-example}, is included with this package to demonstrate the use of versions and change markings.
 
 
 \subsection{Creating versions and changes}
 
-Creating versions and changes is straightforward. A version is created with \MacroRef{DocsNewVersion}, and each individual change is logged using \MacroRef{DocsAddChange}. The change history is then produced with \MacroRef{DocsPrintChanges}.
+Creating versions and changes is straightforward. A version is created with \MacroRef{PDNewVersion}, and each individual change is logged using \MacroRef{PDAddChange}. The change history is then produced with \MacroRef{PDPrintChanges}.
 
-\begin{Macrodef}{DocsNewVersion}{\MArg{version number}\MArg{version date}}{}
-    The \Macro{DocsNewVersion} macro creates a new version entry in the change log. The first required parameter, \Argument{version number}, is used to reference and group the changes made in that version. The version number can follow standard formats, such as \texttt{1.0} or \texttt{2.5.1}, for instance. For the \Argument{version date}, a date in the \textit{YYYY-MM-DD} format is typically used. This date is purely for display in the log, so the specific text format is flexible.
+\begin{Macrodef}{PDNewVersion}{\MArg{version number}\MArg{version date}}{}
+    The \Macro{PDNewVersion} macro creates a new version entry in the change log. The first required parameter, \Argument{version number}, is used to reference and group the changes made in that version. The version number can follow standard formats, such as \texttt{1.0} or \texttt{2.5.1}, for instance. For the \Argument{version date}, a date in the \textit{YYYY-MM-DD} format is typically used. This date is purely for display in the log, so the specific text format is flexible.
 \end{Macrodef}
 
-\begin{DocsListing}
-    \DocsNewVersion{1.0}{2025-01-01}
-\end{DocsListing}
+\begin{PDListing}
+    \PDNewVersion{1.0}{2025-01-01}
+\end{PDListing}
 
-\begin{Macrodef}{DocsAddChange}{\MArg{version number}\MArg{description}\OArg{box options}}{}
-    The mandatory parameters for \Macro{DocsAddChange} include the \Argument{version number}, which must have been previously defined using \MacroRef{DocsNewVersion}, and a comma-separated \Argument{description} list that outlines the specifics of the change.
+\begin{Macrodef}{PDAddChange}{\MArg{version number}\MArg{description}\OArg{box options}}{}
+    The mandatory parameters for \Macro{PDAddChange} include the \Argument{version number}, which must have been previously defined using \MacroRef{PDNewVersion}, and a comma-separated \Argument{description} list that outlines the specifics of the change.
 
     The primary component of the \Argument{description} is, of course, \OptionRef{description}. In addition to this, several other options are available, which are outlined in \Cref{sec:change-options}.
 
     The change boxes utilize the \PackageName{snaptodo} package, meaning that the final optional parameter, \Argument{box options}, can be used to adjust the appearance or modify other properties of the box.
 \end{Macrodef}
 
-\begin{DocsListing}
-    \DocsAddChange{1.0}{
+\begin{PDListing}
+    \PDAddChange{1.0}{
         updated,
         description = {\Macro{SomeMacro} now allows floating point calculations.},
     }
-\end{DocsListing}
+\end{PDListing}
 
-The change log is generated using the \MacroRef{DocsPrintChanges} macro, which functions similarly to other macros, such as \Macro{printindex}.
+The change log is generated using the \MacroRef{PDPrintChanges} macro, which functions similarly to other macros, such as \Macro{printindex}.
 
-\begin{Macrodef}{DocsPrintChanges}{\OArg{options}}{}
-    \Macro{DocsPrintChanges} generates the change log using a fixed, predefined format. Its position within the document is not important and can be determined based on the author's preference.
+\begin{Macrodef}{PDPrintChanges}{\OArg{options}}{}
+    \Macro{PDPrintChanges} generates the change log using a fixed, predefined format. Its position within the document is not important and can be determined based on the author's preference.
 
     The \Argument{options} allow for customization of the \OptionRef{version prefix}, the \OptionRef{header style}, and the \OptionRef{entry style}. (See \Cref{sec:options-change-history}.)
 \end{Macrodef}
 
-\begin{DocsListing}
-    \DocsPrintChanges[version prefix = {V}]
-\end{DocsListing}
+\begin{PDListing}
+    \PDPrintChanges[version prefix = {V}]
+\end{PDListing}
 
 \subsection{Options for the Change History}\label{sec:options-change-history}
 
@@ -421,7 +437,7 @@ This section outlines the options available for the change history. These are ca
 
 \subsubsection{General options}
 
-The following are the general options. All of them are defined using \MacroRef{DocsSet} and can be set either in the preamble or within the body of the text. They can also be used locally as options for \MacroRef{DocsPrintChanges} and \MacroRef{DocsAddChange}.
+The following are the general options. All of them are defined using \MacroRef{PDSet} and can be set either in the preamble or within the body of the text. They can also be used locally as options for \MacroRef{PDPrintChanges} and \MacroRef{PDAddChange}.
 
 \begin{Optiondef}{version prefix}{\Argument{text}}{Initially empty}
     The \Option{version prefix} option sets a \Argument{text} that is added before the version number, appearing both in the change listing and in the margin boxes.
@@ -437,7 +453,7 @@ The following are the general options. All of them are defined using \MacroRef{D
 
 \subsubsection{Change options}\label{sec:change-options}
 
-The options specific to changes are used to define each individual change and therefore have a local effect. However, some can be applied globally with \MacroRef{DocsSet}, as noted in their description.
+The options specific to changes are used to define each individual change and therefore have a local effect. However, some can be applied globally with \MacroRef{PDSet}, as noted in their description.
 
 \begin{Optiondef}{description}{\Argument{text}}{}
     The description of a change refers to the \Argument{text} that will be included in the change history.
@@ -446,72 +462,72 @@ The options specific to changes are used to define each individual change and th
 \end{Optiondef}
 
 \begin{Optiondef}{type}{\Argument{type}}{}
-    \Argument{type} defines the type of change. Its value can be one of the following: \DocsInline{new}, \DocsInline{update}, \DocsInline{change}, \DocsInline{removal}, or \DocsInline{deprecation}. In practice, the key \Option{type} is optional and one can specify directly the values of \Argument{type}.
+    \Argument{type} defines the type of change. Its value can be one of the following: \PDInline{new}, \PDInline{update}, \PDInline{change}, \PDInline{removal}, or \PDInline{deprecation}. In practice, the key \Option{type} is optional and one can specify directly the values of \Argument{type}.
 
-    If no type is specified, the change defaults to \DocsInline{new}.
+    If no type is specified, the change defaults to \PDInline{new}.
 \end{Optiondef}
 
-\begin{DocsListing}
+\begin{PDListing}
     % The three change markers are equivalent.
-    \DocsAddChange{1.0}{
+    \PDAddChange{1.0}{
         description = {A new feature has been implemented.},
     }
-    \DocsAddChange{1.0}{
+    \PDAddChange{1.0}{
         new,
         description = {A new feature has been implemented.},
     }
-    \DocsAddChange{1.0}{
+    \PDAddChange{1.0}{
         type = new,
         description = {A new feature has been implemented.},
     }
-\end{DocsListing}
+\end{PDListing}
 
 \begin{Optiondef}{title}{\Argument{text}}{}
     Using \Option{title}, a \Argument{text} can be added to the box to provide additional relevant information.
 \end{Optiondef}
 
-\begin{DocsListing}
-    \DocsAddChange{1.0}{
+\begin{PDListing}
+    \PDAddChange{1.0}{
         update,
         title = {Paragraphs},
         description = {A modification has been implemented regarding paragraphs.},
     }
-\end{DocsListing}
+\end{PDListing}
 
 
-\begin{Optiondef}{no page}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}}
+\begin{Optiondef}{no page}{\PDInline{true} | \PDInline{false}}{Default: \PDInline{true}}
     The \Option{no page} option is used to omit the page from the change log listing.
 
-    This option can be set globally with \MacroRef{DocsSet}.
+    This option can be set globally with \MacroRef{PDSet}.
 \end{Optiondef}
 
-\begin{DocsListing}
-    \DocsAddChange{1.0}{
+\begin{PDListing}
+    \PDAddChange{1.0}{
         deprecation,
         description = {\Macro{OldThing} is no longer supported.},
         no page,
     }
-\end{DocsListing}
+\end{PDListing}
 
 
-\begin{Optiondef}{no listing}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}}
+\begin{Optiondef}{no listing}{\PDInline{true} | \PDInline{false}}{Default: \PDInline{true}}
     The \Option{no listing} option prevents the change from being added to the change log.
 
-    This option can be set globally with \MacroRef{DocsSet}.
+    This option can be set globally with \MacroRef{PDSet}.
 \end{Optiondef}
 
-\begin{DocsListing}
-    \DocsAddChange{1.0}{
+\begin{PDListing}
+    \PDAddChange{1.0}{
         deprecation,
         description = {\Macro{OldThing} is no longer supported.},
         no listing,
     }
-\end{DocsListing}
+\end{PDListing}
 
-\begin{Optiondef}{no box}{\DocsInline{true} | \DocsInline{false}}{Default: \DocsInline{true}}
+\begin{Optiondef}{no box}{\PDInline{true} | \PDInline{false}}{Default: \PDInline{true}}
     The \Option{no box} option prevents the change box from being displayed in the left margin.
 
-    This option can be set globally with \MacroRef{DocsSet}.
+    This option can be set globally with \MacroRef{PDSet}.
 \end{Optiondef}
 
 \begin{Optiondef}{page}{\Argument{text}}{}
@@ -520,35 +536,35 @@ The options specific to changes are used to define each individual change and th
     In a special case, an empty \Argument{text} is equivalent to \OptionRef{no page}.
 \end{Optiondef}
 
-\begin{DocsListing}
-    \DocsAddChange{1.0}{
+\begin{PDListing}
+    \PDAddChange{1.0}{
         update,
         description = {A substantial amount of changes have been made.},
         page = {Chapt.~5.},
     }
-\end{DocsListing}
+\end{PDListing}
 
 
-\section{\Macro{DocsSet}}
+\section{\Macro{PDSet}}
 
-Certain options, both general and specific to the changes, can be defined globally using \MacroRef{DocsSet}.
+Certain options, both general and specific to the changes, can be defined globally using \MacroRef{PDSet}.
 
-\begin{Macrodef}{DocsSet}{\MArg{options}}{}
-    This macro enables certain settings for the change history and the changes themselves to be applied globally across the entire text, starting with the use of \Macro{DocsSet}.
+\begin{Macrodef}{PDSet}{\MArg{options}}{}
+    This macro enables certain settings for the change history and the changes themselves to be applied globally across the entire text, starting with the use of \Macro{PDSet}.
 \end{Macrodef}
 
-\begin{DocsListing}
-    \DocsSet{
+\begin{PDListing}
+    \PDSet{
         version prefix = {V},  % 0.1 is displayed V0.1
         argument color = blue,  % color for <argument>
         no page,  % all pages are suppressed from the Change History
     }
-\end{DocsListing}
+\end{PDListing}
 
 
 \section{Issues}
 
-As this is the initial version, it is premature to provide a list of known issues. Therefore, any problems or suggestions may be submitted directly to me via email or by opening an issue on \FileName{github} (\url{https://github.com/jandermoreira/docs}).
+As this is the initial version, it is premature to provide a list of known issues. Therefore, any problems or suggestions may be submitted directly to me via email or by opening an issue on \FileName{github} (\url{https://github.com/jandermoreira/packdoc}).
 
 \printindex
 
