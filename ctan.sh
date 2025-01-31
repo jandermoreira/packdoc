@@ -2,17 +2,18 @@
 # Jander Moreira (moreira.jander@gmail.com)
 # 2025
 
-mkdir -p docs
+packagename=packdoc
+mkdir -p $packagename
 files="
   license
   README.md
-  docs.sty
-  docs-doc.tex
-  docs-change-history-example.tex
-  out/docs-doc.pdf
   DEPENDS.txt
+  "$packagename".sty
+  "$packagename"-doc.tex
+  "$packagename"-change-history-example.tex
+  out/"$packagename"-doc.pdf
 "
-cp -v $files docs
-[ -f docs.zip ] && rm docs.zip
-zip -r docs.zip docs
-rm -r ./docs
+cp -v $files $packagename
+[ -f docs.zip ] && rm $packagename.zip
+zip -r $packagename.zip $packagename
+rm -r ./$packagename
