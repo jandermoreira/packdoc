@@ -3,10 +3,10 @@
 %! Date = 2024/10
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{packdoc}[2025/01/26 v0.1 A tool to document LaTeX packages]
+\ProvidesPackage{packdoc}[2025/01/31 v0.1 A tool to document LaTeX packages]
 
 \NewDocumentCommand{\PDVersion}{}{v0.1}
-\NewDocumentCommand{\PDDate}{}{2025/01/26}
+\NewDocumentCommand{\PDDate}{}{2025/01/31}
 
 \RequirePackage{pgfopts}
 
@@ -386,6 +386,7 @@
 % #4: Default
 \NewDocumentEnvironment{elementdef}{ m m m m }{
     \begin{element*}{#1}{#2}{#3}{#4}
+        \phantomsection%
         \PDIndexElement{#1}{#2}%
         \label{#1:#2}
         }{
@@ -416,6 +417,7 @@
 
 \NewDocumentEnvironment{elementenv}{ m m m m }{%
     \begin{elementenv*}{#1}{#2}{#3}{#4}
+        \phantomsection%
         \PDIndexElement{#1}{#2}%
         \label{#1:#2}
         }{%
@@ -470,8 +472,8 @@
 % #1: attribute
 % #2: value
 \cs_new:Npn \set_change_attribute:nn #1#2 {
-    \tl_clear_new:c { g_vc_change_ \int_use:N \g_packdoc_change_counter_int _#1_tl }
-    \tl_gset:cn { g_vc_change_ \int_use:N \g_packdoc_change_counter_int _#1_tl } { #2 }
+    \tl_clear_new:c { g_packdoc_change_ \int_use:N \g_packdoc_change_counter_int _#1_tl }
+    \tl_gset:cn { g_packdoc_change_ \int_use:N \g_packdoc_change_counter_int _#1_tl } { #2 }
 }
 \NewDocumentCommand{\packdoc@SetChangeAttribute}{ m m }{
     \set_change_attribute:nn { #1 } { #2 }
@@ -490,9 +492,9 @@
 % #3: (optional) sets macro instead of returning value
 \NewDocumentCommand{\packdoc@GetChangeInfo}{ m m o }{
     \IfValueTF{#3}{
-        \tl_set:Nx #3 { \tl_use:c { g_vc_change_#1_#2_tl } }
+        \tl_set:Nx #3 { \tl_use:c { g_packdoc_change_#1_#2_tl } }
     }{
-        \tl_use:c { g_vc_change_#1_#2_tl }
+        \tl_use:c { g_packdoc_change_#1_#2_tl }
     }
 }
 
@@ -502,7 +504,7 @@
 % #3: field
 \NewDocumentCommand{\packdoc@SetMacroChangeInfo}{ m m m }{
     \tl_clear_new:N #1
-    \exp_args:NNc \tl_set:NV #1 { g_vc_change_#2_#3_tl }
+    \exp_args:NNc \tl_set:NV #1 { g_packdoc_change_#2_#3_tl }
 }
 
 % RunChangesList: apply a macro to each change of a version
@@ -531,8 +533,8 @@
 \seq_new:N \g_packdoc_versions_list_seq
 \cs_new:Npn \register_version:nn #1#2 {
     \seq_put_right:Nn \g_packdoc_versions_list_seq { #1 }
-    \tl_clear_new:c { g_vc_version_#1_date_tl }
-    \tl_gset:cn { g_vc_version_#1_date_tl } { #2 }
+    \tl_clear_new:c { g_packdoc_version_#1_date_tl }
+    \tl_gset:cn { g_packdoc_version_#1_date_tl } { #2 }
     \seq_new:c { g_version_#1_seq }
 }
 \NewDocumentCommand{\PDNewVersion}{ m m }{
@@ -549,9 +551,9 @@
 % #2: (optional) macro to store the value
 \NewDocumentCommand{\packdoc@VersionDate}{ m o }{
     \IfValueTF{#2}{
-        \tl_set:Nx #2 { \tl_use:c { g_vc_version_#1_date_tl } }
+        \tl_set:Nx #2 { \tl_use:c { g_packdoc_version_#1_date_tl } }
     }{
-        \tl_use:c { g_vc_version_#1_date_tl }
+        \tl_use:c { g_packdoc_version_#1_date_tl }
     }
 }
 
@@ -567,7 +569,7 @@
 }
 \NewDocumentCommand{\packdoc@AddChangeToVersion}{ }{
     \add_change_to_version:n {
-        \tl_use:c { g_vc_change_ \int_use:N \g_packdoc_change_counter_int _version_tl }
+        \tl_use:c { g_packdoc_change_ \int_use:N \g_packdoc_change_counter_int _version_tl }
     }
 }
 
@@ -682,7 +684,7 @@
 % LoadFile: reads a previous compiled version changes
 \cs_new:Nn \load_file: {
     \tl_clear_new:N \g_packdoc_file_contents_tl
-    \ior_open:NnTF \g_packdoc_input_io { \jobname.vcind } {
+    \ior_open:NnTF \g_packdoc_input_io { \jobname.packdoc-ind } {
         \ior_map_inline:Nn \g_packdoc_input_io {
             \tl_gput_right:Nn \g_packdoc_file_contents_tl { ##1 }
         }
@@ -708,7 +710,7 @@
 
 % OpenFile: open file for writing
 \NewDocumentCommand{\packdoc@OpenFile}{ }{
-    \iow_open:Nn \g_packdoc_output_io { \jobname.vcind }
+    \iow_open:Nn \g_packdoc_output_io { \jobname.packdoc-ind }
 }
 
 % CloseFile: close file
@@ -759,7 +761,7 @@
 
 \NewDocumentCommand{\packdoc@WriteVersion}{ m }{%
 %! parser = off
-    \packdoc@AddToBuffer{\begin{vcversionitem}}%
+    \packdoc@AddToBuffer{\begin{pdversionitem}}%
     %! parser = on
     \packdoc@AddCharToBuffer{\{}%
     \packdoc@AddToBuffer{#1}%
@@ -771,7 +773,7 @@
     \packdoc@WriteBuffer
     \packdoc@RunChangesList{#1}{\packdoc@WriteVersionChange}%
 %! parser = off
-    \packdoc@AddToBuffer{\end{vcversionitem}}%
+    \packdoc@AddToBuffer{\end{pdversionitem}}%
     %! parser = on
     \packdoc@WriteBuffer
 }
@@ -796,7 +798,7 @@
 }
 
 %% Printing the list of changes
-\NewDocumentEnvironment{vcversionitem}{ m m }{%
+\NewDocumentEnvironment{pdversionitem}{ m m }{%
     \par\noindent%
     {\packdoc@VersionStyle\packdoc@VersionPrefix#1 (#2)}
     \vspace*{0.2em}\par%
