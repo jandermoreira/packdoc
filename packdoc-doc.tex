@@ -36,6 +36,7 @@ This package is not intended to replace or compete with the use of \FileName{.dt
 
 This package offers the capability to document commands and environments, in addition to supporting versioning through a change log.
 
+
 \section{Package usage and options}
 To use this package, it must be loaded with \Macro{usepackage}.
 
@@ -360,6 +361,7 @@ Inline code can use \Macro{PDInline}.
 
 \begin{Macrodef}{PDInline}{\MArg{code}}{}
     %! parser = off
+
     This macro is used to display \LaTeX\ code. If braces are balanced, the use \PDInline{\PDInline{{example}}} (\PDInline{{example}}) holds; when unbalanced, \PDInline$\PDInline!{example!$ (\PDInline!{example!) can be used. The use is equivalent to \Macro{verb}.
     %! parser = on
 \end{Macrodef}
@@ -374,12 +376,12 @@ Inline code can use \Macro{PDInline}.
     In context, some tildes can be compared:
 
     \begin{tabular}{ccc}
-        \textbf{Code} & Result & Result (monotype) \\
+        \textbf{Code}                                         & Result               & Result (monotype)             \\
         \hline
-        ab\Macro{PDTilde} cd & ab\PDTilde cd & \texttt{ab\PDTilde cd} \\
-        ab\PDInline{\~{}cd} & ab\~{}cd & \texttt{ab\~{}cd} \\
-        ab\PDInline{\texttildelow}cd (\PackageName{textcomp}) & ab\texttildelow cd & \texttt{ab\texttildelow cd} \\
-        ab\PDInline{\textasciitilde}cd & ab\textasciitilde cd & \texttt{ab\textasciitilde cd} \\
+        ab\Macro{PDTilde} cd                                  & ab\PDTilde cd        & \texttt{ab\PDTilde cd}        \\
+        ab\PDInline{\~{}cd}                                   & ab\~{}cd             & \texttt{ab\~{}cd}             \\
+        ab\PDInline{\texttildelow}cd (\PackageName{textcomp}) & ab\texttildelow cd   & \texttt{ab\texttildelow cd}   \\
+        ab\PDInline{\textasciitilde}cd                        & ab\textasciitilde cd & \texttt{ab\textasciitilde cd} \\
     \end{tabular}
 
 \end{Macrodef}
@@ -390,7 +392,6 @@ Inline code can use \Macro{PDInline}.
 This package provides a straightforward yet flexible set of tools for tracking and managing changes across different versions. Each version is uniquely identified by its version number and has its release date.
 
 A sample document, \FileName{packdoc-change-history-example}, is included with this package to demonstrate the use of versions and change markings.
-
 
 \subsection{Creating versions and changes}
 
@@ -468,7 +469,7 @@ The options specific to changes are used to define each individual change and th
 \end{Optiondef}
 
 \begin{PDListing}
-    % The three change markers are equivalent.
+        % The three change markers are equivalent.
     \PDAddChange{1.0}{
         description = {A new feature has been implemented.},
     }

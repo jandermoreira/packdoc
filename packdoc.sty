@@ -289,22 +289,22 @@
         }
         \NewDocumentEnvironment{#1*}{ m m m }{%
             \begin{element*}{#1}{##1}{##2}{##3}
-            }{
+        }{
             \end{element*}
         }
         \NewDocumentEnvironment{#1def}{ m m m }{
             \begin{elementdef}{#1}{##1}{##2}{##3}
-            }{
+        }{
             \end{elementdef}
         }
         \NewDocumentEnvironment{#1env*}{ m m m }{
             \begin{elementenv*}{#1}{##1}{##2}{##3}
-            }{
+        }{
             \end{elementenv*}
         }
         \NewDocumentEnvironment{#1env}{ m m m }{
             \begin{elementenv}{#1}{##1}{##2}{##3}
-            }{
+        }{
             \end{elementenv}
         }
     }
@@ -375,7 +375,7 @@
         \packdoc@IfHasLength{#4}{\csuse{packdoc@#1@ComplementPrefix}#4}{}%
         },
     ]%
-    }{%
+}{%
     \end{tcolorbox}%
     \medskip%
 }
@@ -386,10 +386,10 @@
 % #4: Default
 \NewDocumentEnvironment{elementdef}{ m m m m }{
     \begin{element*}{#1}{#2}{#3}{#4}
-        \phantomsection%
-        \PDIndexElement{#1}{#2}%
-        \label{#1:#2}
-        }{
+    \phantomsection%
+    \PDIndexElement{#1}{#2}%
+    \label{#1:#2}
+}{
     \end{element*}
 }
 
@@ -399,28 +399,28 @@
 % #4: Environment contents
 \NewDocumentEnvironment{elementenv*}{ m m m m }{%
     \begin{tcolorbox}%
-        [
-        title = {%
-            %! parser=off
+    [
+    title = {%
+        %! parser=off
             \hspace{-\packdoc@ColorBoxIndent}\latexinline!\begin!\texttt{\{}\csuse{#1}{#2}\texttt{\}}#3\par
             \hspace{-0.5\packdoc@ColorBoxIndent}%
             \packdoc@IfHasLength{#4}{#4}{\Argument{environment contents}}\par
             \hspace{-\packdoc@ColorBoxIndent}\latexinline!\end!\texttt{\{}\csuse{#1}{#2}\texttt{\}}%
             %! parser=on
-        },
-        description,
-        ]
-            }{%
+    },
+    description,
+    ]
+}{%
     \end{tcolorbox}%
     \medskip%
 }
 
 \NewDocumentEnvironment{elementenv}{ m m m m }{%
     \begin{elementenv*}{#1}{#2}{#3}{#4}
-        \phantomsection%
-        \PDIndexElement{#1}{#2}%
-        \label{#1:#2}
-        }{%
+    \phantomsection%
+    \PDIndexElement{#1}{#2}%
+    \label{#1:#2}
+}{%
     \end{elementenv*}
 }
 
@@ -805,7 +805,7 @@
     \begingroup%
     \setlength{\tabcolsep}{0pt}%
     \packdoc@ChangeStyle%
-    }{%
+}{%
     \endgroup%
     \vspace{0.5em}%
 }
